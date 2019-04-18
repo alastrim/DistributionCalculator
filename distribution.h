@@ -3,8 +3,8 @@
 
 class target_function;
 
-std::vector<double> values (vals_and_bases src);
-std::vector<double> bases (vals_and_bases src);
+std::vector<int> values (vals_and_bases src);
+std::vector<int> bases (vals_and_bases src);
 
 
 class distribution

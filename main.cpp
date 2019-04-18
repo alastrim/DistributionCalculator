@@ -15,9 +15,9 @@ int main (int argc, char **argv)
   distribution rapier = damage_on_hit (auto_crit (d20 + 8, AC), d8 + d6 * 3 + 5, AC);
   rapier.show ();
 
-  // то же самое с 10д6 скрытой атаки
-  distribution stronger_rapier = damage_on_hit (auto_crit (d20 + 8, AC), d8 + d6 * 10 + 5, AC);
-  stronger_rapier.show ();
+//  // то же самое с 10д6 скрытой атаки
+//  distribution stronger_rapier = damage_on_hit (auto_crit (d20 + 8, AC), d8 + d6 * 10 + 5, AC);
+//  stronger_rapier.show ();
 
   return a.exec ();
 }

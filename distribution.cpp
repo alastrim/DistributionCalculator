@@ -2,17 +2,17 @@
 #include "chart_painter.h"
 #include "target_function.h"
 
-std::vector<double> values (vals_and_bases src)
+std::vector<int> values (vals_and_bases src)
 {
-  std::vector<double> result;
+  std::vector<int> result;
   for (const val_and_base &pair : src)
     result.push_back (pair.first);
   return result;
 }
 
-std::vector<double> bases (vals_and_bases src)
+std::vector<int> bases (vals_and_bases src)
 {
-  std::vector<double> result;
+  std::vector<int> result;
   for (const val_and_base &pair : src)
     result.push_back (pair.second);
   return result;

@@ -28,17 +28,17 @@ unsigned int tou (int src)
   return static_cast<unsigned int> (src);
 }
 
-double sum (std::vector<double> values)
+int sum (std::vector<int> values)
 {
-  return std::accumulate (values.begin (), values.end (), 0.0);
+  return std::accumulate (values.begin (), values.end (), 0);
 }
 
-double min (std::vector<double> values)
+int min (std::vector<int> values)
 {
   return *std::min_element (values.begin (), values.end ());
 }
 
-double max (std::vector<double> values)
+int max (std::vector<int> values)
 {
   return *std::max_element (values.begin (), values.end ());
 }
