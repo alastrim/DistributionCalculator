@@ -9,14 +9,9 @@ int main (int argc, char **argv)
 {
   QApplication a (argc, argv);
 
-  distribution damage_dice = great_weapon_fighting (d10) + 3;
-  distribution attack_dice = d20 + 6;
-
   unsigned int AC = 15;
-  distribution result_damage = damage_on_hit (attack_dice, damage_dice, AC);
-  distribution two_attacks = result_damage + result_damage;
-
-  two_attacks.show ();
+  distribution result_damage = damage_on_hit (d20 + 6, great_weapon_fighting (d10) + 3, AC);
+  result_damage.show ();
 
   return a.exec ();
 }

@@ -8,7 +8,7 @@ class distribution
 {
 public:
   distribution (const distribution &rhs);
-  distribution (std::vector<distribution> distibutions, target_function &function, std::string name);
+  distribution (std::vector<distribution> distibutions, target_function function, std::string name);
   distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name);
   distribution operator + (distribution rhs);
   distribution operator + (double rhs);

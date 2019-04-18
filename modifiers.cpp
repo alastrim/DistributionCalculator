@@ -2,7 +2,7 @@
 #include "distribution.h"
 #include "target_function.h"
 
-distribution great_weapon_fighting (distribution &base_damage_dice)
+distribution great_weapon_fighting (distribution base_damage_dice)
 {
   std::vector<distribution> v = {base_damage_dice, base_damage_dice};
   target_function f ([] (auto vals)
@@ -17,7 +17,7 @@ distribution great_weapon_fighting (distribution &base_damage_dice)
   return distribution (v, f, "Result");
 }
 
-distribution advantage (distribution &base_attack_dice)
+distribution advantage (distribution base_attack_dice)
 {
   std::vector<distribution> v = {base_attack_dice, base_attack_dice};
   target_function f ([] (auto vals)
@@ -30,7 +30,7 @@ distribution advantage (distribution &base_attack_dice)
   return distribution (v, f, "Result");
 }
 
-distribution damage_on_hit (distribution &attack_dice, distribution &damage_dice, unsigned int armor_class)
+distribution damage_on_hit (distribution attack_dice, distribution damage_dice, unsigned int armor_class)
 {
   std::vector<distribution> v = {attack_dice.get_base (), attack_dice, damage_dice.get_base (), damage_dice};
   target_function f ([=] (auto vals)

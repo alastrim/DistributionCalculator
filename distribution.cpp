@@ -64,7 +64,7 @@ complex_distribution distribution::recursive_helper (std::vector<distribution> &
   return  result_values_and_probabilities;
 }
 
-distribution::distribution (std::vector<distribution> distibutions, target_function &function, std::string name)
+distribution::distribution (std::vector<distribution> distibutions, target_function function, std::string name)
 {
   std::vector<std::pair<double, double>> values_and_probabilities;
   complex_distribution complex = recursive_helper (distibutions);
