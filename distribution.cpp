@@ -44,6 +44,16 @@ distribution distribution::operator + (double rhs)
   return distribution (v, f, "result");
 }
 
+distribution distribution::operator * (int rhs)
+{
+  std::vector<distribution> v = distribution_vector (*this, tou (rhs));
+  target_function f ([] (vals_and_bases vb)
+  {
+      return val_and_base (sum (values (vb)), sum (bases (vb)));
+    }, v);
+  return distribution (v, f, "result");
+}
+
 complex_distribution distribution::recursive_helper (std::vector<distribution> &distributions)
 {
   al_assert (!distributions.empty (), "Bad call to recursive thing");

@@ -15,6 +15,7 @@ public:
   distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name);
   distribution operator + (distribution rhs);
   distribution operator + (double rhs);
+  distribution operator * (int rhs);
   distribution get_base () const;
   void show ();
 
