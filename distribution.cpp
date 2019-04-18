@@ -3,6 +3,12 @@
 
 typedef std::vector<std::pair<std::vector<double>, double>> complex_distribution;
 
+std::vector<distribution> distibution_vector (distribution etalon, unsigned int count)
+{
+  std::vector<distribution> result (count, etalon);
+  return result;
+}
+
 target_function::target_function (std::function<double (const std::vector<double> &)> function, std::vector<distribution> &base)
   : m_function (function), m_arg_count (toi (base.size ()))
 {
