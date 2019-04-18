@@ -1,6 +1,6 @@
 #include "misc.h"
 
-void assert (bool check, std::string message)
+void al_assert (bool check, std::string message)
 {
   if (!check)
     fprintf (stderr, "WARNING: %s\n", message.c_str());

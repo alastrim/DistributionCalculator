@@ -1,0 +1,54 @@
+#include "chart_painter.h"
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMainWindow>
+#include <QtCharts/QChartView>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QLegend>
+#include <QtCharts/QBarCategoryAxis>
+
+QT_CHARTS_USE_NAMESPACE
+std::unique_ptr<QWidget> create_chart (std::vector<std::pair<double, int>> values_and_case_counts, std::string name)
+{
+  std::vector<std::pair<double, double>> values_and_probabilities;
+  int total_case_count = 0;
+  double average = 0;
+  for (const std::pair<double, int> &value_and_case_count : values_and_case_counts)
+    total_case_count += value_and_case_count.second;
+  for (const std::pair<double, int> &value_and_case_count : values_and_case_counts)
+    {
+      double value = value_and_case_count.first;
+      double probability = static_cast<double> (value_and_case_count.second) / total_case_count;
+      values_and_probabilities.push_back ({value, probability});
+      average += value * probability;
+    }
+
+  QBarSet *set0 = new QBarSet (name.c_str ());
+  QStringList categories;
+  QBarCategoryAxis *axis = new QBarCategoryAxis ();
+  QBarSeries *series = new QBarSeries ();
+  QChart *chart = new QChart ();
+
+  for (const std::pair<double, double> &value_and_probability : values_and_probabilities)
+    {
+      categories << std::to_string (value_and_probability.first).c_str ();
+      *set0 << value_and_probability.second;
+    }
+
+  series->append (set0);
+  axis->append (categories);
+  chart->addSeries (series);
+  chart->createDefaultAxes ();
+  chart->setAxisX (axis, series);
+
+  chart->setTitle ((std::string ("Average = " ) + std::to_string (average)).c_str ());
+  chart->setAnimationOptions (QChart::SeriesAnimations);
+  chart->legend ()->setVisible (true);
+  chart->legend ()->setAlignment (Qt::AlignBottom);
+
+  std::unique_ptr<QChartView> chartView = std::make_unique<QChartView> (chart);
+  chartView->setRenderHint (QPainter::Antialiasing);
+  chartView->resize (800, 600);
+  chartView->show ();
+  return chartView;
+}
