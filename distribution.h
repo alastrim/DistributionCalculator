@@ -13,6 +13,7 @@ public:
   distribution operator + (distribution rhs);
   distribution operator + (double rhs);
   distribution get_base () const;
+  void set_base (distribution base);
   void show ();
 
 private:

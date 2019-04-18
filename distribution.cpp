@@ -16,6 +16,11 @@ distribution distribution::get_base () const
   return *this;
 }
 
+void distribution::set_base (distribution base)
+{
+  m_base = std::make_unique<distribution> (base);
+}
+
 distribution distribution::operator + (distribution rhs)
 {
   std::vector<distribution> v { *this, rhs };

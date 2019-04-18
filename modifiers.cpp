@@ -32,18 +32,41 @@ distribution advantage (distribution base_attack_dice)
 
 distribution improved_critical_strike (distribution base_attack_dice)
 {
-  std::vector<distribution> v = {base_attack_dice.get_base (), base_attack_dice};
+  std::vector<distribution> v = {base_attack_dice.get_base ()};
   target_function f ([] (auto vals)
+    {
+      int dmg_dice_1 = static_cast<int> (vals[0]);
+
+      if (dmg_dice_1 == 19 ||  dmg_dice_1 == 20)
+        return 20;
+
+      return dmg_dice_1;
+     }, v);
+
+  distribution new_base (v, f, "Result");
+  distribution result (base_attack_dice);
+  result.set_base (new_base);
+  return result;
+}
+
+distribution auto_crit (distribution base_attack_dice, unsigned int armor_class)
+{
+  std::vector<distribution> v = {base_attack_dice.get_base (), base_attack_dice};
+  target_function f ([armor_class] (auto vals)
     {
       int dmg_dice_1 = static_cast<int> (vals[0]);
       int dmg_dice_2 = static_cast<int> (vals[1]);
 
-      if (dmg_dice_1 == 19 || dmg_dice_1 == 20)
+      if (dmg_dice_2 >= toi (armor_class))
         return 20;
 
-      return dmg_dice_2;
+      return dmg_dice_1;
      }, v);
-  return distribution (v, f, "Result");
+
+  distribution new_base (v, f, "Result");
+  distribution result (base_attack_dice);
+  result.set_base (new_base);
+  return result;
 }
 
 distribution damage_on_hit (distribution attack_dice, distribution damage_dice, unsigned int armor_class)
@@ -65,5 +88,4 @@ distribution damage_on_hit (distribution attack_dice, distribution damage_dice, 
       return 0;
     }, v);
   return distribution (v, f, "Result");
-
 }
