@@ -2,17 +2,17 @@
 #include "chart_painter.h"
 #include "target_function.h"
 
-std::vector<int> values (vals_and_bases src)
+std::vector<al_argtype> values (vals_and_bases src)
 {
-  std::vector<int> result;
+  std::vector<al_argtype> result;
   for (const val_and_base &pair : src)
     result.push_back (pair.first);
   return result;
 }
 
-std::vector<int> bases (vals_and_bases src)
+std::vector<al_argtype> bases (vals_and_bases src)
 {
-  std::vector<int> result;
+  std::vector<al_argtype> result;
   for (const val_and_base &pair : src)
     result.push_back (pair.second);
   return result;
@@ -34,7 +34,7 @@ distribution distribution::operator + (distribution rhs)
   return distribution (v, f, "result");
 }
 
-distribution distribution::operator + (double rhs)
+distribution distribution::operator + (al_argtype rhs)
 {
   std::vector<distribution> v { *this };
   target_function f ([rhs] (vals_and_bases vb)
@@ -44,7 +44,7 @@ distribution distribution::operator + (double rhs)
   return distribution (v, f, "result");
 }
 
-distribution distribution::operator * (int rhs)
+distribution distribution::operator * (al_argtype rhs)
 {
   std::vector<distribution> v = distribution_vector (*this, tou (rhs));
   target_function f ([] (vals_and_bases vb)

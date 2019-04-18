@@ -3,8 +3,8 @@
 
 class target_function;
 
-std::vector<int> values (vals_and_bases src);
-std::vector<int> bases (vals_and_bases src);
+std::vector<al_argtype> values (vals_and_bases src);
+std::vector<al_argtype> bases (vals_and_bases src);
 
 
 class distribution
@@ -14,8 +14,8 @@ public:
   distribution (std::vector<distribution> distibutions, target_function function, std::string name);
   distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name);
   distribution operator + (distribution rhs);
-  distribution operator + (double rhs);
-  distribution operator * (int rhs);
+  distribution operator + (al_argtype rhs);
+  distribution operator * (al_argtype rhs);
   distribution get_base () const;
   void show ();
 
