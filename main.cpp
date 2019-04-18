@@ -17,11 +17,11 @@ int main (int argc, char **argv)
 
   target_function highiest = [] (std::vector<double> values)
   {
-    al_assert (values.size () == 3, "Bad value vector size");
+    al_assert (values.size () == 6, "Bad value vector size");
     return *std::max_element (values.begin (), values.end ());
   };
-  std::vector<distribution> three_stat_rolls = { stat_roll, stat_roll, stat_roll };
-  distribution highiest_stat_roll (three_stat_rolls, highiest, "Highiest stat value from six stat rolls");
+  std::vector<distribution> six_stat_rolls = { stat_roll, stat_roll, stat_roll, stat_roll, stat_roll, stat_roll };
+  distribution highiest_stat_roll (six_stat_rolls, highiest, "Highiest stat value from six stat rolls");
   highiest_stat_roll.show ();
 
   return a.exec ();

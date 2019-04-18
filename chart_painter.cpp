@@ -8,18 +8,13 @@
 #include <QtCharts/QBarCategoryAxis>
 
 QT_CHARTS_USE_NAMESPACE
-std::unique_ptr<QWidget> create_chart (std::vector<std::pair<double, uint64_t> > values_and_case_counts, std::string name)
+std::unique_ptr<QWidget> create_chart (std::vector<std::pair<double, double> > values_and_probabilities, std::string name)
 {
-  std::vector<std::pair<double, double>> values_and_probabilities;
-  int total_case_count = 0;
   double average = 0;
-  for (const std::pair<double, uint64_t> &value_and_case_count : values_and_case_counts)
-    total_case_count += value_and_case_count.second;
-  for (const std::pair<double, uint64_t> &value_and_case_count : values_and_case_counts)
+  for (const std::pair<double, double> &value_and_case_count : values_and_probabilities)
     {
       double value = value_and_case_count.first;
-      double probability = static_cast<double> (value_and_case_count.second) / total_case_count;
-      values_and_probabilities.push_back ({value, probability});
+      double probability = value_and_case_count.second;
       average += value * probability;
     }
 
