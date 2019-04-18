@@ -17,3 +17,6 @@ void al_assert (bool check, std::string message);
 int toi (size_t src);
 unsigned int tou (int src);
 int fuzzycmp (double a, double b = 0.0);
+double sum (std::vector<double> values);
+double min (std::vector<double> values);
+double max (std::vector<double> values);

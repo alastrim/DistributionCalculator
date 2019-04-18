@@ -27,3 +27,18 @@ unsigned int tou (int src)
 {
   return static_cast<unsigned int> (src);
 }
+
+double sum (std::vector<double> values)
+{
+  return std::accumulate (values.begin (), values.end (), 0.0);
+}
+
+double min (std::vector<double> values)
+{
+  return *std::min_element (values.begin (), values.end ());
+}
+
+double max (std::vector<double> values)
+{
+  return *std::max_element (values.begin (), values.end ());
+}

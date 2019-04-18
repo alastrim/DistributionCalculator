@@ -3,6 +3,17 @@
 
 typedef std::vector<std::pair<std::vector<double>, double>> complex_distribution;
 
+target_function::target_function (std::function<double (const std::vector<double> &)> function, std::vector<distribution> &base)
+  : m_function (function), m_arg_count (toi (base.size ()))
+{
+}
+
+double target_function::operator () (const std::vector<double> &values)
+{
+  al_assert (values.size () == tou (m_arg_count), "Bad value vector size");
+  return m_function (values);
+}
+
 static complex_distribution recursive_helper (std::vector<distribution> &distributions)
 {
   al_assert (!distributions.empty (), "Bad call to recursive thing");
@@ -60,6 +71,20 @@ distribution::distribution (std::vector<distribution> distibutions, target_funct
   simplify ();
 }
 
+distribution::distribution (const distribution &rhs)
+{
+  al_assert (!m_view && !rhs.m_view, "Dont copy view plz");
+  m_values_and_probabilities = rhs.m_values_and_probabilities;
+  m_name = rhs.m_name;
+  simplify ();
+}
+
+distribution::distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name)
+  : m_values_and_probabilities (values_and_probabilities), m_name (name)
+{
+  simplify ();
+}
+
 void distribution::simplify ()
 {
   std::vector<std::pair<double, double>> values_and_probabilities;
@@ -73,20 +98,6 @@ void distribution::simplify ()
       values_and_probabilities.push_back ({value, probability});
     }
   m_values_and_probabilities = values_and_probabilities;
-}
-
-distribution::distribution (const distribution &rhs)
-{
-  al_assert (!m_view && !rhs.m_view, "Dont copy view plz");
-  m_values_and_probabilities = rhs.m_values_and_probabilities;
-  m_name = rhs.m_name;
-  simplify ();
-}
-
-distribution::distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name)
-  : m_values_and_probabilities (values_and_probabilities), m_name (name)
-{
-  simplify ();
 }
 
 void distribution::show ()
