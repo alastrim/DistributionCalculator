@@ -9,7 +9,7 @@ int main (int argc, char **argv)
 {
   QApplication a (argc, argv);
 
-  unsigned int AC = 15;
+  unsigned int AC = 19;
 
   distribution rapier = damage_on_hit (auto_crit (d20 + 8, AC), d8 + d6 + d6 + d6 + 5, AC);
   rapier.show ();

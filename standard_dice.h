@@ -14,6 +14,14 @@ distribution create_d_something ()
   return distribution (values_and_probabilities, name);
 }
 
+distribution create_zero ();
+distribution create_zero ()
+{
+  std::vector<std::pair<double, double>> values_and_probabilities = {{0, 1}};
+  return distribution (values_and_probabilities, "d0");
+}
+
+static distribution d0 = create_zero ();
 static distribution d4 = create_d_something<4> ();
 static distribution d6 = create_d_something<6> ();
 static distribution d8 = create_d_something<8> ();

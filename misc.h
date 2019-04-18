@@ -13,6 +13,11 @@
 #define ELEMS_ON_SCREEN 12
 #define DEBUG 1
 
+typedef std::pair<double, double> val_and_base;
+typedef const std::vector<val_and_base> & vals_and_bases;
+typedef std::pair<val_and_base, double> value_and_probability;
+typedef std::vector<std::pair<std::vector<val_and_base>, double>> complex_distribution;
+
 void al_assert (bool check, std::string message);
 int toi (size_t src);
 unsigned int tou (int src);

@@ -1,8 +1,11 @@
 #pragma once
 #include "misc.h"
 
-typedef std::vector<std::pair<std::vector<double>, double>> complex_distribution;
 class target_function;
+
+std::vector<double> values (vals_and_bases src);
+std::vector<double> bases (vals_and_bases src);
+
 
 class distribution
 {
@@ -13,16 +16,14 @@ public:
   distribution operator + (distribution rhs);
   distribution operator + (double rhs);
   distribution get_base () const;
-  void set_base (distribution base);
   void show ();
 
 private:
   void simplify ();
   static complex_distribution recursive_helper (std::vector<distribution> &distributions);
-  static std::vector<std::pair<double, double>> from_complex (complex_distribution &complex, target_function function);
-  std::vector<std::pair<double, double>> m_values_and_probabilities;
+  static std::vector<std::pair<val_and_base, double>> from_complex (complex_distribution &complex, target_function function);
+  std::vector<value_and_probability> m_values_and_probabilities;
   std::string m_name;
-  std::unique_ptr<distribution> m_base;
   std::unique_ptr<QWidget> m_view;
 };
 
