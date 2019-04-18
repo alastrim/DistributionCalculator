@@ -1,8 +1,7 @@
-﻿#include "distribution.h"
+#include "distribution.h"
 #include "chart_painter.h"
 #include "target_function.h"
 
-typedef std::vector<std::pair<std::vector<double>, double>> complex_distribution;
 
 std::vector<distribution> distribution_vector (distribution etalon, unsigned int count)
 {
@@ -10,7 +9,12 @@ std::vector<distribution> distribution_vector (distribution etalon, unsigned int
   return result;
 }
 
-
+distribution distribution::get_base ()
+{
+  if (m_base)
+    return *m_base;
+  return *this;
+}
 
 distribution distribution::operator + (distribution rhs)
 {
@@ -23,10 +27,12 @@ distribution distribution::operator + (double rhs)
 {
   std::vector<distribution> v { *this };
   target_function f ([rhs] (auto vals) {return vals[0] + rhs; }, v);
-  return distribution (v, f, "result");
+  distribution result (v, f, "result");
+  result.m_base = std::make_unique<distribution> (*this);
+  return result;
 }
 
-static complex_distribution recursive_helper (std::vector<distribution> &distributions)
+complex_distribution distribution::recursive_helper (std::vector<distribution> &distributions)
 {
   al_assert (!distributions.empty (), "Bad call to recursive thing");
 
