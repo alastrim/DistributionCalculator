@@ -22,11 +22,15 @@ distribution advantage (distribution base_attack_dice)
   std::vector<distribution> v = {base_attack_dice, base_attack_dice};
   target_function f ([] (vals_and_bases vb)
     {
-      int dmg_dice_1 = (values (vb)[0]);
-      int dmg_dice_2 = (values (vb)[1]);
+      int base_1 = (bases (vb)[0]);
+      int base_2 = (bases (vb)[1]);
+      int val_1 = values (vb)[0];
+      int val_2 = values (vb)[1];
 
-      int max = std::max (dmg_dice_1, dmg_dice_2);
-      return val_and_base (max, max);
+      int base_max = std::max (base_1, base_2);
+      int val_max = std::max (val_1, val_2);
+
+      return val_and_base (val_max, base_max);
      }, v);
   return distribution (v, f, "Result");
 }

@@ -13,7 +13,7 @@
 #define ELEMS_ON_SCREEN 12
 #define DEBUG 1
 
-typedef char al_argtype;
+typedef int al_argtype;
 typedef std::pair<al_argtype, al_argtype> val_and_base;
 typedef const std::vector<val_and_base> & vals_and_bases;
 typedef std::pair<val_and_base, double> value_and_probability;

@@ -155,5 +155,7 @@ void distribution::show ()
   for (const value_and_probability &pair : m_values_and_probabilities)
     result.push_back ({pair.first.first, pair.second});
 
+  std::sort (result.begin (), result.end (), [] (std::pair<double, double> a, std::pair<double, double> b) {return a.first < b.first; });
+
   m_view = create_chart (result, m_name);
 }
