@@ -12,12 +12,13 @@ public:
   distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name);
   distribution operator + (distribution rhs);
   distribution operator + (double rhs);
-  distribution get_base ();
+  distribution get_base () const;
   void show ();
 
 private:
   void simplify ();
-  complex_distribution recursive_helper (std::vector<distribution> &distributions);
+  static complex_distribution recursive_helper (std::vector<distribution> &distributions);
+  static std::vector<std::pair<double, double>> from_complex (complex_distribution &complex, target_function function);
   std::vector<std::pair<double, double>> m_values_and_probabilities;
   std::string m_name;
   std::unique_ptr<distribution> m_base;

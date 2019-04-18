@@ -9,7 +9,7 @@ std::vector<distribution> distribution_vector (distribution etalon, unsigned int
   return result;
 }
 
-distribution distribution::get_base ()
+distribution distribution::get_base () const
 {
   if (m_base)
     return *m_base;
@@ -61,13 +61,27 @@ complex_distribution distribution::recursive_helper (std::vector<distribution> &
         }
     }
 
-  return  result_values_and_probabilities;
+  return result_values_and_probabilities;
 }
 
 distribution::distribution (std::vector<distribution> distibutions, target_function function, std::string name)
 {
-  std::vector<std::pair<double, double>> values_and_probabilities;
+  std::vector<distribution> bases;
+  for (const distribution &it : distibutions)
+    bases.push_back (it.get_base ());
+
   complex_distribution complex = recursive_helper (distibutions);
+  m_values_and_probabilities = from_complex (complex, function);
+  m_name = name;
+  simplify ();
+
+  complex = recursive_helper (bases);
+  m_base = std::make_unique<distribution> (from_complex (complex, function), name);
+}
+
+std::vector<std::pair<double, double>> distribution::from_complex (complex_distribution &complex, target_function function)
+{
+  std::vector<std::pair<double, double>> values_and_probabilities;
 
   for (const std::pair<std::vector<double>, double> &value_and_case_count : complex)
     {
@@ -84,9 +98,7 @@ distribution::distribution (std::vector<distribution> distibutions, target_funct
       else
         it->second += case_count;
     }
-  m_values_and_probabilities = values_and_probabilities;
-  m_name = name;
-  simplify ();
+  return values_and_probabilities;
 }
 
 distribution::distribution (const distribution &rhs)
@@ -94,6 +106,10 @@ distribution::distribution (const distribution &rhs)
   al_assert (!m_view && !rhs.m_view, "Dont copy view plz");
   m_values_and_probabilities = rhs.m_values_and_probabilities;
   m_name = rhs.m_name;
+  if (rhs.m_base)
+    m_base = std::make_unique<distribution> (rhs.get_base ());
+  else
+    m_base.reset ();
   simplify ();
 }
 
