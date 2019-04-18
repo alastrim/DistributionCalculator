@@ -8,14 +8,14 @@
 #include <QtCharts/QBarCategoryAxis>
 
 QT_CHARTS_USE_NAMESPACE
-std::unique_ptr<QWidget> create_chart (std::vector<std::pair<double, int>> values_and_case_counts, std::string name)
+std::unique_ptr<QWidget> create_chart (std::vector<std::pair<double, uint64_t> > values_and_case_counts, std::string name)
 {
   std::vector<std::pair<double, double>> values_and_probabilities;
   int total_case_count = 0;
   double average = 0;
-  for (const std::pair<double, int> &value_and_case_count : values_and_case_counts)
+  for (const std::pair<double, uint64_t> &value_and_case_count : values_and_case_counts)
     total_case_count += value_and_case_count.second;
-  for (const std::pair<double, int> &value_and_case_count : values_and_case_counts)
+  for (const std::pair<double, uint64_t> &value_and_case_count : values_and_case_counts)
     {
       double value = value_and_case_count.first;
       double probability = static_cast<double> (value_and_case_count.second) / total_case_count;
@@ -31,7 +31,14 @@ std::unique_ptr<QWidget> create_chart (std::vector<std::pair<double, int>> value
 
   for (const std::pair<double, double> &value_and_probability : values_and_probabilities)
     {
-      categories << std::to_string (value_and_probability.first).c_str ();
+      double value = value_and_probability.first;
+      double probability = value_and_probability.second;
+      std::string value_label = (!fuzzycmp (round (value), value) ? std::to_string (static_cast<int> (value)) : std::to_string (value));
+      char buf[100];
+      std::sprintf (buf, "%.2f%%", probability * 100);
+      std::string probability_label (buf);
+
+      categories << (value_label + ", " + probability_label).c_str ();
       *set0 << value_and_probability.second;
     }
 

@@ -1,7 +1,7 @@
 #include "distribution.h"
 #include "chart_painter.h"
 
-typedef std::vector<std::pair<std::vector<double>, int>> complex_distribution;
+typedef std::vector<std::pair<std::vector<double>, uint64_t>> complex_distribution;
 
 static complex_distribution recursive_helper (std::vector<distribution> &distributions)
 {
@@ -14,19 +14,19 @@ static complex_distribution recursive_helper (std::vector<distribution> &distrib
 
   if (distributions.empty ())
     {
-      for (const std::pair<double, int> &outer_value_and_case_count : outer.m_values_and_case_counts)
+      for (const std::pair<double, uint64_t> &outer_value_and_case_count : outer.m_values_and_case_counts)
         result_values_and_case_counts.push_back ({{outer_value_and_case_count.first}, outer_value_and_case_count.second});
       return result_values_and_case_counts;
     };
 
   complex_distribution inner = recursive_helper (distributions);
-  for (const std::pair<std::vector<double>, int> &inner_value_and_case_count : inner)
+  for (const std::pair<std::vector<double>, uint64_t> &inner_value_and_case_count : inner)
     {
-      for (const std::pair<double, int> &outer_value_and_case_count : outer.m_values_and_case_counts)
+      for (const std::pair<double, uint64_t> &outer_value_and_case_count : outer.m_values_and_case_counts)
         {
           std::vector<double> new_value = inner_value_and_case_count.first;
           new_value.push_back (outer_value_and_case_count.first);
-          int case_count = outer_value_and_case_count.second * inner_value_and_case_count.second;
+          uint64_t case_count = outer_value_and_case_count.second * inner_value_and_case_count.second;
 
           result_values_and_case_counts.push_back ({{new_value}, case_count});
         }
@@ -37,13 +37,13 @@ static complex_distribution recursive_helper (std::vector<distribution> &distrib
 
 distribution::distribution (std::vector<distribution> distibutions, target_function function, std::string name)
 {
-  std::vector<std::pair<double, int>> values_and_case_counts;
+  std::vector<std::pair<double, uint64_t>> values_and_case_counts;
   complex_distribution complex = recursive_helper (distibutions);
 
-  for (const std::pair<std::vector<double>, int> &value_and_case_count : complex)
+  for (const std::pair<std::vector<double>, uint64_t> &value_and_case_count : complex)
     {
       double value = function (value_and_case_count.first);
-      int case_count = value_and_case_count.second;
+      uint64_t case_count = value_and_case_count.second;
 
       auto it = std::find_if (values_and_case_counts.begin (), values_and_case_counts.end (), [value] (const std::pair<double, int> &val_and_count)
       {
@@ -66,7 +66,7 @@ distribution::distribution (const distribution &rhs)
   m_name = rhs.m_name;
 }
 
-distribution::distribution (std::vector<std::pair<double, int>> values_and_case_counts, std::string name)
+distribution::distribution (std::vector<std::pair<double, uint64_t>> values_and_case_counts, std::string name)
   : m_values_and_case_counts (values_and_case_counts), m_name (name)
 {
 
