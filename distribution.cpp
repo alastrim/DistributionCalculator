@@ -1,5 +1,6 @@
 ﻿#include "distribution.h"
 #include "chart_painter.h"
+#include "target_function.h"
 
 typedef std::vector<std::pair<std::vector<double>, double>> complex_distribution;
 
@@ -9,15 +10,20 @@ std::vector<distribution> distribution_vector (distribution etalon, unsigned int
   return result;
 }
 
-target_function::target_function (std::function<double (const std::vector<double> &)> function, std::vector<distribution> &base)
-  : m_function (function), m_arg_count (toi (base.size ()))
+
+
+distribution distribution::operator + (distribution rhs)
 {
+  std::vector<distribution> v { *this, rhs };
+  target_function f ([] (auto vals) {return sum (vals); }, v);
+  return distribution (v, f, "result");
 }
 
-double target_function::operator () (const std::vector<double> &values)
+distribution distribution::operator + (double rhs)
 {
-  al_assert (values.size () == tou (m_arg_count), "Bad value vector size");
-  return m_function (values);
+  std::vector<distribution> v { *this };
+  target_function f ([rhs] (auto vals) {return vals[0] + rhs; }, v);
+  return distribution (v, f, "result");
 }
 
 static complex_distribution recursive_helper (std::vector<distribution> &distributions)
@@ -52,7 +58,7 @@ static complex_distribution recursive_helper (std::vector<distribution> &distrib
   return  result_values_and_probabilities;
 }
 
-distribution::distribution (std::vector<distribution> distibutions, target_function function, std::string name)
+distribution::distribution (std::vector<distribution> distibutions, target_function &function, std::string name)
 {
   std::vector<std::pair<double, double>> values_and_probabilities;
   complex_distribution complex = recursive_helper (distibutions);
