@@ -3,7 +3,7 @@
 
 typedef std::vector<std::pair<std::vector<double>, double>> complex_distribution;
 
-std::vector<distribution> distibution_vector (distribution etalon, unsigned int count)
+std::vector<distribution> distribution_vector (distribution etalon, unsigned int count)
 {
   std::vector<distribution> result (count, etalon);
   return result;

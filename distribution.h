@@ -3,7 +3,7 @@
 
 class distribution;
 
-std::vector<distribution> distibution_vector (distribution etalon, unsigned int count);
+std::vector<distribution> distribution_vector (distribution etalon, unsigned int count);
 
 class target_function
 {
