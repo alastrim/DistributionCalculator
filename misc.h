@@ -17,7 +17,6 @@ typedef int al_argtype;
 typedef std::pair<al_argtype, al_argtype> val_and_base;
 typedef const std::vector<val_and_base> & vals_and_bases;
 typedef std::pair<val_and_base, double> value_and_probability;
-typedef std::vector<std::pair<std::vector<val_and_base>, double>> complex_distribution;
 
 void al_assert (bool check, std::string message);
 int toi (size_t src);

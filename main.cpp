@@ -16,10 +16,13 @@ int main (int argc, char **argv)
 //  distribution hollen_round = superiority_glaive * 4 + shaft;
 //  hollen_round.show ();
 
-  distribution direwolf = damage_on_hit (advantage (d20 + 5), d6 * 2 + 3, AC);
-  distribution wolf = damage_on_hit (advantage (d20 + 4), d4 * 2 + 2, AC);
-  distribution druid_round = direwolf + wolf * 8;
-  druid_round.show ();
+//  distribution direwolf = damage_on_hit (advantage (d20 + 5), d6 * 2 + 3, AC);
+//  distribution wolf = damage_on_hit (advantage (d20 + 4), d4 * 2 + 2, AC);
+//  distribution druid_round = direwolf + wolf * 8;
+//  druid_round.show ();
+
+  distribution rapier = damage_on_hit (auto_crit (d20 + 8, AC), d8 + d6 * 10 + 8, AC);
+  rapier.show ();
 
   return a.exec ();
 }
