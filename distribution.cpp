@@ -86,11 +86,79 @@ complex_distribution distribution::recursive_helper (std::vector<distribution> &
   return result_values_and_probabilities;
 }
 
+//distribution::distribution (std::vector<distribution> distibutions, target_function function, std::string name)
+//{
+//  complex_distribution complex = recursive_helper (distibutions);
+//  m_values_and_probabilities = from_complex (complex, function);
+//  m_name = name;
+//  simplify ();
+//}
+
+void distribution::alt_recursive_helper (std::vector<distribution> &distributions,
+                                         std::vector<ind_and_size> &levels,
+                                         std::pair<std::vector<val_and_base>, double> &prev,
+                                         int level_to_tick)
+{
+  int level = toi (prev.first.size ());
+  if (tou (level) >= levels.size ())
+    return;
+  int curr_ind = levels[tou (level)].first;
+
+  value_and_probability vp = distributions[tou (level)].m_values_and_probabilities[tou (curr_ind)];
+  prev.first.push_back (vp.first);
+  prev.second *= vp.second;
+
+  alt_recursive_helper (distributions, levels, prev, level_to_tick);
+}
+
 distribution::distribution (std::vector<distribution> distibutions, target_function function, std::string name)
 {
-  complex_distribution complex = recursive_helper (distibutions);
-  m_values_and_probabilities = from_complex (complex, function);
   m_name = name;
+  std::vector<ind_and_size> levels;
+  int totsize = 1;
+
+  for (const distribution &d : distibutions)
+    {
+      int sz = toi (d.m_values_and_probabilities.size ());
+      levels.push_back ({0, sz});
+      totsize *= sz;
+    }
+
+  int level_to_tick = 0;
+  for (int i = 0; i < totsize; i++)
+    {
+      std::pair<std::vector<val_and_base>, double> emp = {{}, 1};
+
+      alt_recursive_helper (distibutions, levels, emp, level_to_tick);
+
+      levels[tou (level_to_tick)].first++;
+      for (int lv = level_to_tick; lv < toi (levels.size ()); lv++)
+        {
+          if (levels[tou (lv)].first == levels[tou (lv)].second)
+            {
+              levels[tou (lv)].first = 0;
+              levels[tou (lv + 1)].first++;
+            }
+          else
+            break;
+        }
+      level_to_tick = 0;
+
+      val_and_base value = function (emp.first);
+      double case_count = emp.second;
+
+      auto it = std::find_if (m_values_and_probabilities.begin (), m_values_and_probabilities.end (),
+                              [value] (const std::pair<val_and_base, double> &val_and_count)
+      {
+          return (!fuzzycmp (value.first, val_and_count.first.first)
+                  && !fuzzycmp (value.second, val_and_count.first.second));
+        });
+
+      if (it == m_values_and_probabilities.end ())
+        m_values_and_probabilities.push_back ({value, case_count});
+      else
+        it->second += case_count;
+    }
   simplify ();
 }
 
