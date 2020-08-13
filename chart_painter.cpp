@@ -1,25 +1,24 @@
 #include "chart_painter.h"
 #include <cstdio>
 
-void create_chart (std::vector<std::pair<double, double> > values_and_probabilities, std::string name)
+void create_chart (std::vector<value_and_probability> values_and_probabilities, std::string name)
 {
   double average = 0;
-  for (const std::pair<double, double> &value_and_case_count : values_and_probabilities)
+  for (const value_and_probability &value_and_case_count : values_and_probabilities)
     {
-      double value = value_and_case_count.first;
-      double probability = value_and_case_count.second;
+      int value = value_and_case_count.m_val.m_val;
+      double probability = value_and_case_count.m_probability;
       average += value * probability;
     }
 
   printf ("Stats for %s:\n", name.c_str ());
   printf ("Average = %f\n", average);
 
-  for (const std::pair<double, double> &value_and_probability : values_and_probabilities)
+  for (const value_and_probability &value_and_probability : values_and_probabilities)
     {
-      double value = value_and_probability.first;
-      double probability = value_and_probability.second;
-      std::string value_label = (!fuzzycmp (round (value), value) ? std::to_string (static_cast<int> (value)) : std::to_string (value));
-      printf ("%s: %.2f%%\n", value_label.c_str (), probability * 100);
+      int value = value_and_probability.m_val.m_val;
+      double probability = value_and_probability.m_probability;
+      printf ("%d: %.2f%%\n", value, probability * 100);
     }
 
 }

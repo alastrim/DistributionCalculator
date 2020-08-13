@@ -6,7 +6,7 @@ template<int SIZE>
 distribution create_d_something ()
 {
   int size = SIZE;
-  std::vector<std::pair<double, double>> values_and_probabilities;
+  std::vector<value_and_probability> values_and_probabilities;
   for (int i = 1; i <= size; i++)
     values_and_probabilities.push_back ({i, 1});
 
@@ -16,7 +16,7 @@ distribution create_d_something ()
 distribution create_zero ();
 distribution create_zero ()
 {
-  std::vector<std::pair<double, double>> values_and_probabilities = {{0, 1}};
+  std::vector<value_and_probability> values_and_probabilities = {{0, 1}};
   return distribution (values_and_probabilities);
 }
 

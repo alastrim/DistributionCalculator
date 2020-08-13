@@ -12,14 +12,31 @@
 #define ELEMS_ON_SCREEN 12
 #define DEBUG 1
 
-typedef int al_argtype;
-typedef std::pair<al_argtype, al_argtype> element_type;
-typedef std::pair<element_type, double> value_and_probability;
+struct element_t
+{
+  bool operator == (const element_t &o) const { return m_val == o.m_val && m_base == o.m_base; }
+  bool operator < (const element_t &o) const { return m_val < o.m_val; }
+  element_t () {}
+  element_t (int val, int base) : m_val (val), m_base (base) {}
+  element_t (int val) : element_t (val, val) {}
+  element_t (const element_t &o) : m_val (o.m_val), m_base (o.m_base) {}
+  element_t &operator = (const element_t &o) { m_val = o.m_val; m_base = o.m_base; return *this; }
+  int m_val = 0;
+  int m_base = 0;
+};
+
+struct value_and_probability
+{
+  value_and_probability (element_t val, double probability) : m_val (val), m_probability (probability) {}
+  bool operator < (const value_and_probability &o) const { return m_val < o.m_val; }
+  element_t m_val;
+  double m_probability = 0;
+};
 
 void al_assert (bool check, std::string message);
 int toi (size_t src);
 unsigned int tou (int src);
 int fuzzycmp (double a, double b = 0.0);
-al_argtype sum (std::vector<al_argtype> values);
-al_argtype min (std::vector<al_argtype> values);
-al_argtype max (std::vector<al_argtype> values);
+int sum (std::vector<int> values);
+int min (std::vector<int> values);
+int max (std::vector<int> values);

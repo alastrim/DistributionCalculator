@@ -35,17 +35,17 @@ unsigned int tou (int src)
   return static_cast<unsigned int> (src);
 }
 
-al_argtype sum (std::vector<al_argtype> values)
+int sum (std::vector<int> values)
 {
-  return std::accumulate (values.begin (), values.end (), static_cast<al_argtype> (0));
+  return std::accumulate (values.begin (), values.end (), static_cast<int> (0));
 }
 
-al_argtype min (std::vector<al_argtype> values)
+int min (std::vector<int> values)
 {
   return *std::min_element (values.begin (), values.end ());
 }
 
-al_argtype max (std::vector<al_argtype> values)
+int max (std::vector<int> values)
 {
   return *std::max_element (values.begin (), values.end ());
 }

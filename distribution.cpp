@@ -3,19 +3,19 @@
 #include "target_function.h"
 #include <algorithm>
 
-std::vector<al_argtype> values (const std::vector<element_type> & src)
+std::vector<int> values (const std::vector<element_t> & src)
 {
-  std::vector<al_argtype> result;
-  for (const element_type &pair : src)
-    result.push_back (pair.first);
+  std::vector<int> result;
+  for (const element_t &pair : src)
+    result.push_back (pair.m_val);
   return result;
 }
 
-std::vector<al_argtype> bases (const std::vector<element_type> & src)
+std::vector<int> bases (const std::vector<element_t> & src)
 {
-  std::vector<al_argtype> result;
-  for (const element_type &pair : src)
-    result.push_back (pair.second);
+  std::vector<int> result;
+  for (const element_t &pair : src)
+    result.push_back (pair.m_base);
   return result;
 }
 
@@ -28,29 +28,29 @@ std::vector<distribution> distribution_vector (distribution etalon, unsigned int
 distribution distribution::operator + (distribution rhs)
 {
   std::vector<distribution> v { *this, rhs };
-  target_function f ([] (const std::vector<element_type> & vb)
+  target_function f ([] (const std::vector<element_t> & vb)
   {
-      return element_type (sum (values (vb)), sum (bases (vb)));
+      return element_t (sum (values (vb)), sum (bases (vb)));
     }, v);
   return distribution (v, f);
 }
 
-distribution distribution::operator + (al_argtype rhs)
+distribution distribution::operator + (int rhs)
 {
   std::vector<distribution> v { *this };
-  target_function f ([rhs] (const std::vector<element_type> & vb)
+  target_function f ([rhs] (const std::vector<element_t> & vb)
   {
-      return element_type (values (vb)[0] + rhs, bases (vb)[0]);
+      return element_t (values (vb)[0] + rhs, bases (vb)[0]);
     }, v);
   return distribution (v, f);
 }
 
-distribution distribution::operator * (al_argtype rhs)
+distribution distribution::operator * (int rhs)
 {
   std::vector<distribution> v = distribution_vector (*this, tou (rhs));
-  target_function f ([] (const std::vector<element_type> & vb)
+  target_function f ([] (const std::vector<element_t> & vb)
   {
-      return element_type (sum (values (vb)), sum (bases (vb)));
+      return element_t (sum (values (vb)), sum (bases (vb)));
     }, v);
   return distribution (v, f);
 }
@@ -62,7 +62,7 @@ distribution::distribution (std::vector<distribution> distributions, target_func
   size_t current_level;
 
   std::vector<ind_and_size> levels (size);
-  std::pair<std::vector<element_type>, double> vals = { std::vector<element_type> (size), 1 };
+  std::pair<std::vector<element_t>, double> vals = { std::vector<element_t> (size), 1 };
 
   for (size_t i = 0; i < size; i++)
   {
@@ -79,8 +79,8 @@ distribution::distribution (std::vector<distribution> distributions, target_func
         {
           size_t curr_ind = levels[current_level].first;
           value_and_probability vp = distributions[current_level].m_values_and_probabilities[curr_ind];
-          vals.first[current_level] = vp.first;
-          vals.second *= vp.second;
+          vals.first[current_level] = vp.m_val;
+          vals.second *= vp.m_probability;
         }
 
       // tick indices
@@ -95,20 +95,19 @@ distribution::distribution (std::vector<distribution> distributions, target_func
         }
 
       // add value to results
-      element_type value = function (vals.first);
+      element_t value = function (vals.first);
       double probability = vals.second;
 
       auto it = std::find_if (m_values_and_probabilities.begin (), m_values_and_probabilities.end (),
-                              [value] (const std::pair<element_type, double> &val_and_count)
+                              [value] (const value_and_probability &val_and_count)
       {
-          return (value.first == val_and_count.first.first
-                  && value.second == val_and_count.first.second);
+          return value == val_and_count.m_val;
         });
 
       if (it == m_values_and_probabilities.end ())
         m_values_and_probabilities.push_back ({value, probability});
       else
-        it->second += probability;
+        it->m_probability += probability;
     }
   simplify ();
 }
@@ -119,23 +118,22 @@ distribution::distribution (const distribution &rhs)
   simplify ();
 }
 
-distribution::distribution (std::vector<std::pair<double, double>> values_and_probabilities)
+distribution::distribution (std::vector<value_and_probability> values_and_probabilities)
 {
-  for (const std::pair<double, double> &it : values_and_probabilities)
-    m_values_and_probabilities.push_back ({{it.first, it.first}, it.second});
+  m_values_and_probabilities = values_and_probabilities;
   simplify ();
 }
 
 void distribution::simplify ()
 {
-  std::vector<std::pair<element_type, double>> values_and_probabilities;
+  std::vector<value_and_probability> values_and_probabilities;
   double total_probability = 0;
-  for (const std::pair<element_type, double> &value_and_case_count : m_values_and_probabilities)
-    total_probability += value_and_case_count.second;
-  for (const std::pair<element_type, double> &value_and_case_count : m_values_and_probabilities)
+  for (const value_and_probability &value_and_case_count : m_values_and_probabilities)
+    total_probability += value_and_case_count.m_probability;
+  for (const value_and_probability &value_and_case_count : m_values_and_probabilities)
     {
-      element_type value = value_and_case_count.first;
-      double probability = static_cast<double> (value_and_case_count.second) / total_probability;
+      element_t value = value_and_case_count.m_val;
+      double probability = static_cast<double> (value_and_case_count.m_probability) / total_probability;
       values_and_probabilities.push_back ({value, probability});
     }
   m_values_and_probabilities = values_and_probabilities;
@@ -143,10 +141,7 @@ void distribution::simplify ()
 
 void distribution::show (const std::string &name)
 {
-  std::vector<std::pair<double, double>> result;
-  for (const value_and_probability &pair : m_values_and_probabilities)
-    result.push_back ({pair.first.first, pair.second});
-
-  std::sort (result.begin (), result.end (), [] (std::pair<double, double> a, std::pair<double, double> b) {return a.first < b.first; });
+  std::vector<value_and_probability> result = m_values_and_probabilities;
+  std::sort (result.begin (), result.end ());//, [] (value_and_probability a, value_and_probability b) {return a.first < b.first; });
   create_chart (result, name);
 }

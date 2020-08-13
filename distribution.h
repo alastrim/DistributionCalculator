@@ -4,8 +4,8 @@
 class target_function;
 typedef std::pair<size_t, size_t> ind_and_size;
 
-std::vector<al_argtype> values (const std::vector<element_type> & src);
-std::vector<al_argtype> bases (const std::vector<element_type> & src);
+std::vector<int> values (const std::vector<element_t> & src);
+std::vector<int> bases (const std::vector<element_t> & src);
 
 
 class distribution
@@ -13,10 +13,10 @@ class distribution
 public:
   distribution (const distribution &rhs);
   distribution (std::vector<distribution> distributions, target_function function);
-  distribution (std::vector<std::pair<double, double>> values_and_probabilities);
+  distribution (std::vector<value_and_probability> values_and_probabilities);
   distribution operator + (distribution rhs);
-  distribution operator + (al_argtype rhs);
-  distribution operator * (al_argtype rhs);
+  distribution operator + (int rhs);
+  distribution operator * (int rhs);
   distribution get_base () const;
   void show (const std::string &name = "distribution");
 
