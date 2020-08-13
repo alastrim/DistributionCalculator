@@ -1,4 +1,6 @@
 #include "misc.h"
+#include <algorithm>
+#include <numeric>
 
 void al_assert (bool check, std::string message)
 {

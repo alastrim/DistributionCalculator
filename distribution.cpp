@@ -1,6 +1,7 @@
 #include "distribution.h"
 #include "chart_painter.h"
 #include "target_function.h"
+#include <algorithm>
 
 std::vector<al_argtype> values (vals_and_bases src)
 {
@@ -77,6 +78,7 @@ distribution::distribution (std::vector<distribution> distributions, target_func
       std::pair<std::vector<val_and_base>, double> emp = {{}, 1};
       while ((current_level = emp.first.size ()) < levels_size)
         {
+          al_assert (current_level < levels.size (), "");
           size_t curr_ind = levels[current_level].first;
 
           value_and_probability vp = distributions[current_level].m_values_and_probabilities[curr_ind];
@@ -88,6 +90,7 @@ distribution::distribution (std::vector<distribution> distributions, target_func
       levels[level_to_tick].first++;
       for (size_t lv = level_to_tick; (lv < levels_size && levels[lv].first == levels[lv].second); lv++)
         {
+          al_assert (lv < levels.size (), "");
           levels[lv].first = 0;
           levels[lv + 1].first++;
         }
@@ -114,7 +117,6 @@ distribution::distribution (std::vector<distribution> distributions, target_func
 
 distribution::distribution (const distribution &rhs)
 {
-  al_assert (!m_view && !rhs.m_view, "Dont copy view plz");
   m_values_and_probabilities = rhs.m_values_and_probabilities;
   m_name = rhs.m_name;
   simplify ();
@@ -150,6 +152,5 @@ void distribution::show ()
     result.push_back ({pair.first.first, pair.second});
 
   std::sort (result.begin (), result.end (), [] (std::pair<double, double> a, std::pair<double, double> b) {return a.first < b.first; });
-
-  m_view = create_chart (result, m_name);
+  create_chart (result, m_name);
 }
