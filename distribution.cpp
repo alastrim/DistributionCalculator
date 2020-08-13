@@ -58,52 +58,53 @@ distribution distribution::operator * (al_argtype rhs)
 distribution::distribution (std::vector<distribution> distributions, target_function function, std::string name)
 {
   m_name = name;
-  std::vector<ind_and_size> levels;
-  size_t levels_size = distributions.size ();
+
+  size_t size = distributions.size ();
   size_t total_size = 1;
   size_t current_level;
 
-  std::for_each (distributions.begin (), distributions.end (), [&] (const distribution & d)
-  {
-      size_t sz = d.m_values_and_probabilities.size ();
-      levels.push_back ({0, sz});
-      total_size *= sz;
-    });
+  std::vector<ind_and_size> levels (size);
+  std::pair<std::vector<val_and_base>, double> vals = { std::vector<val_and_base> (size), 1 };
 
+  for (size_t i = 0; i < size; i++)
+  {
+    size_t sz = distributions[i].m_values_and_probabilities.size ();
+    levels[i] = { 0, sz };
+    total_size *= sz;
+  }
 
   for (size_t i = 0; i < total_size; i++)
     {
       // create vector of values
-      std::pair<std::vector<val_and_base>, double> emp = {{}, 1};
-      while ((current_level = emp.first.size ()) < levels_size)
+      vals.second = 1;
+      for (current_level = 0; current_level < size; current_level++)
         {
           size_t curr_ind = levels[current_level].first;
-
           value_and_probability vp = distributions[current_level].m_values_and_probabilities[curr_ind];
-          emp.first.push_back (vp.first);
-          emp.second *= vp.second;
+          vals.first[current_level] = vp.first;
+          vals.second *= vp.second;
         }
 
       // tick indices
       levels[0].first++;
-      for (size_t lv = 0; (lv < levels_size && levels[lv].first == levels[lv].second); lv++)
+      for (size_t lv = 0; (lv < size && levels[lv].first == levels[lv].second); lv++)
         {
           levels[lv].first = 0;
-          if (lv < levels_size - 1)
+          if (lv < size - 1)
             levels[lv + 1].first++;
           else
             al_assert (i == total_size - 1, "Should be in the end");
         }
 
       // add value to results
-      val_and_base value = function (emp.first);
-      double probability = emp.second;
+      val_and_base value = function (vals.first);
+      double probability = vals.second;
 
       auto it = std::find_if (m_values_and_probabilities.begin (), m_values_and_probabilities.end (),
                               [value] (const std::pair<val_and_base, double> &val_and_count)
       {
-          return (!fuzzycmp (value.first, val_and_count.first.first)
-                  && !fuzzycmp (value.second, val_and_count.first.second));
+          return (value.first == val_and_count.first.first
+                  && value.second == val_and_count.first.second);
         });
 
       if (it == m_values_and_probabilities.end ())

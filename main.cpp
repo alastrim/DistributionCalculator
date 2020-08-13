@@ -18,7 +18,7 @@ int main ()
   distribution druid_round = direwolf + wolf * 4;
   druid_round.show ();
 
-  distribution rapier = damage_on_hit (auto_crit (d20 + 8, AC), d8 + d6 * 8 + 8, AC);
+  distribution rapier = damage_on_hit (auto_crit (d20 + 8, AC), d8 + d6 * 10 + 8, AC);
   rapier.show ();
 
   return 0;
