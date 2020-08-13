@@ -20,7 +20,6 @@ QMAKE_CXXFLAGS += -g -W -Wall -Wunused -Wcast-align -Werror -pedantic -pedantic-
 QMAKE_CXXFLAGS += -O3 -ffast-math
 #QMAKE_CXXFLAGS += -O0
 CONFIG += console
-win32
-{
+win32 {
   LIBS += -lssp
 }
