@@ -1,6 +1,7 @@
 #include "misc.h"
 #include <algorithm>
 #include <numeric>
+#include <signal.h>
 
 void al_assert (bool check, std::string message)
 {
