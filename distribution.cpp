@@ -141,7 +141,5 @@ void distribution::simplify ()
 
 void distribution::show (const std::string &name)
 {
-  std::vector<value_and_probability> result = m_values_and_probabilities;
-  std::sort (result.begin (), result.end ());//, [] (value_and_probability a, value_and_probability b) {return a.first < b.first; });
-  create_chart (result, name);
+  create_chart (m_values_and_probabilities, name);
 }
