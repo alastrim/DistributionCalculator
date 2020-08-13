@@ -14,7 +14,7 @@ distribution great_weapon_fighting (distribution base_damage_dice)
         return val_and_base (dmg_dice_2, dmg_dice_2);
       return val_and_base (dmg_dice_1, dmg_dice_1);
      }, v);
-  return distribution (v, f, "Result");
+  return distribution (v, f);
 }
 
 distribution advantage (distribution base_attack_dice)
@@ -32,7 +32,7 @@ distribution advantage (distribution base_attack_dice)
 
       return val_and_base (val_max, base_max);
      }, v);
-  return distribution (v, f, "Result");
+  return distribution (v, f);
 }
 
 distribution improved_critical_strike (distribution base_attack_dice)
@@ -48,7 +48,7 @@ distribution improved_critical_strike (distribution base_attack_dice)
 
       return val_and_base (val_dice, base_dice);
      }, v);
-  return distribution (v, f, "Result");
+  return distribution (v, f);
 }
 
 distribution auto_crit (distribution base_attack_dice, unsigned int armor_class)
@@ -64,7 +64,7 @@ distribution auto_crit (distribution base_attack_dice, unsigned int armor_class)
 
       return val_and_base (val_dice, base_dice);
      }, v);
-  return distribution (v, f, "Result");
+  return distribution (v, f);
 }
 
 distribution damage_on_hit (distribution attack_dice, distribution damage_dice, unsigned int armor_class)
@@ -85,5 +85,5 @@ distribution damage_on_hit (distribution attack_dice, distribution damage_dice, 
         return val_and_base (val_damage, val_damage);
       return val_and_base (0, 0);
     }, v);
-  return distribution (v, f, "Result");
+  return distribution (v, f);
 }

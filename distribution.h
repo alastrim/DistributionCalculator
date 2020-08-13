@@ -12,19 +12,17 @@ class distribution
 {
 public:
   distribution (const distribution &rhs);
-  distribution (std::vector<distribution> distributions, target_function function, std::string name);
-  distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name);
+  distribution (std::vector<distribution> distributions, target_function function);
+  distribution (std::vector<std::pair<double, double>> values_and_probabilities);
   distribution operator + (distribution rhs);
   distribution operator + (al_argtype rhs);
   distribution operator * (al_argtype rhs);
   distribution get_base () const;
-  void show ();
+  void show (const std::string &name = "distribution");
 
 private:
   void simplify ();
-
   std::vector<value_and_probability> m_values_and_probabilities;
-  std::string m_name;
 };
 
 std::vector<distribution> distribution_vector (distribution etalon, unsigned int count);

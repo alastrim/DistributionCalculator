@@ -10,15 +10,14 @@ distribution create_d_something ()
   for (int i = 1; i <= size; i++)
     values_and_probabilities.push_back ({i, 1});
 
-  std::string name = "d" + std::to_string (size);
-  return distribution (values_and_probabilities, name);
+  return distribution (values_and_probabilities);
 }
 
 distribution create_zero ();
 distribution create_zero ()
 {
   std::vector<std::pair<double, double>> values_and_probabilities = {{0, 1}};
-  return distribution (values_and_probabilities, "d0");
+  return distribution (values_and_probabilities);
 }
 
 static distribution d0 = create_zero ();

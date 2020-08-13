@@ -32,7 +32,7 @@ distribution distribution::operator + (distribution rhs)
   {
       return val_and_base (sum (values (vb)), sum (bases (vb)));
     }, v);
-  return distribution (v, f, "result");
+  return distribution (v, f);
 }
 
 distribution distribution::operator + (al_argtype rhs)
@@ -42,7 +42,7 @@ distribution distribution::operator + (al_argtype rhs)
   {
       return val_and_base (values (vb)[0] + rhs, bases (vb)[0]);
     }, v);
-  return distribution (v, f, "result");
+  return distribution (v, f);
 }
 
 distribution distribution::operator * (al_argtype rhs)
@@ -52,13 +52,11 @@ distribution distribution::operator * (al_argtype rhs)
   {
       return val_and_base (sum (values (vb)), sum (bases (vb)));
     }, v);
-  return distribution (v, f, "result");
+  return distribution (v, f);
 }
 
-distribution::distribution (std::vector<distribution> distributions, target_function function, std::string name)
+distribution::distribution (std::vector<distribution> distributions, target_function function)
 {
-  m_name = name;
-
   size_t size = distributions.size ();
   size_t total_size = 1;
   size_t current_level;
@@ -118,12 +116,10 @@ distribution::distribution (std::vector<distribution> distributions, target_func
 distribution::distribution (const distribution &rhs)
 {
   m_values_and_probabilities = rhs.m_values_and_probabilities;
-  m_name = rhs.m_name;
   simplify ();
 }
 
-distribution::distribution (std::vector<std::pair<double, double>> values_and_probabilities, std::string name)
-  : m_name (name)
+distribution::distribution (std::vector<std::pair<double, double>> values_and_probabilities)
 {
   for (const std::pair<double, double> &it : values_and_probabilities)
     m_values_and_probabilities.push_back ({{it.first, it.first}, it.second});
@@ -145,12 +141,12 @@ void distribution::simplify ()
   m_values_and_probabilities = values_and_probabilities;
 }
 
-void distribution::show ()
+void distribution::show (const std::string &name)
 {
   std::vector<std::pair<double, double>> result;
   for (const value_and_probability &pair : m_values_and_probabilities)
     result.push_back ({pair.first.first, pair.second});
 
   std::sort (result.begin (), result.end (), [] (std::pair<double, double> a, std::pair<double, double> b) {return a.first < b.first; });
-  create_chart (result, m_name);
+  create_chart (result, name);
 }
