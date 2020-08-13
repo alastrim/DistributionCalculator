@@ -61,7 +61,6 @@ distribution::distribution (std::vector<distribution> distributions, target_func
   std::vector<ind_and_size> levels;
   size_t levels_size = distributions.size ();
   size_t total_size = 1;
-  size_t level_to_tick = 0;
   size_t current_level;
 
   std::for_each (distributions.begin (), distributions.end (), [&] (const distribution & d)
@@ -78,7 +77,6 @@ distribution::distribution (std::vector<distribution> distributions, target_func
       std::pair<std::vector<val_and_base>, double> emp = {{}, 1};
       while ((current_level = emp.first.size ()) < levels_size)
         {
-          al_assert (current_level < levels.size (), "");
           size_t curr_ind = levels[current_level].first;
 
           value_and_probability vp = distributions[current_level].m_values_and_probabilities[curr_ind];
@@ -87,18 +85,19 @@ distribution::distribution (std::vector<distribution> distributions, target_func
         }
 
       // tick indices
-      levels[level_to_tick].first++;
-      for (size_t lv = level_to_tick; (lv < levels_size && levels[lv].first == levels[lv].second); lv++)
+      levels[0].first++;
+      for (size_t lv = 0; (lv < levels_size && levels[lv].first == levels[lv].second); lv++)
         {
-          al_assert (lv < levels.size (), "");
           levels[lv].first = 0;
-          levels[lv + 1].first++;
+          if (lv < levels_size - 1)
+            levels[lv + 1].first++;
+          else
+            al_assert (i == total_size - 1, "Should be in the end");
         }
-      level_to_tick = 0;
 
       // add value to results
       val_and_base value = function (emp.first);
-      double case_count = emp.second;
+      double probability = emp.second;
 
       auto it = std::find_if (m_values_and_probabilities.begin (), m_values_and_probabilities.end (),
                               [value] (const std::pair<val_and_base, double> &val_and_count)
@@ -108,9 +107,9 @@ distribution::distribution (std::vector<distribution> distributions, target_func
         });
 
       if (it == m_values_and_probabilities.end ())
-        m_values_and_probabilities.push_back ({value, case_count});
+        m_values_and_probabilities.push_back ({value, probability});
       else
-        it->second += case_count;
+        it->second += probability;
     }
   simplify ();
 }

@@ -4,10 +4,15 @@
 
 void al_assert (bool check, std::string message)
 {
-  if (!check)
+    if (!check)
     {
-      fprintf (stderr, "WARNING: %s\n", message.c_str());
-      throw std::exception ();
+        fprintf (stderr, "WARNING: %s\n", message.c_str ());
+#ifndef _WIN32
+        ::raise (SIGTRAP);
+#else
+        __asm__("int $3");
+#endif
+        throw std::runtime_error (message);
     }
 }
 
