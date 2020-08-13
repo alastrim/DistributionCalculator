@@ -6,7 +6,7 @@
 std::vector<al_argtype> values (vals_and_bases src)
 {
   std::vector<al_argtype> result;
-  for (const val_and_base &pair : src)
+  for (const element_type &pair : src)
     result.push_back (pair.first);
   return result;
 }
@@ -14,7 +14,7 @@ std::vector<al_argtype> values (vals_and_bases src)
 std::vector<al_argtype> bases (vals_and_bases src)
 {
   std::vector<al_argtype> result;
-  for (const val_and_base &pair : src)
+  for (const element_type &pair : src)
     result.push_back (pair.second);
   return result;
 }
@@ -30,7 +30,7 @@ distribution distribution::operator + (distribution rhs)
   std::vector<distribution> v { *this, rhs };
   target_function f ([] (vals_and_bases vb)
   {
-      return val_and_base (sum (values (vb)), sum (bases (vb)));
+      return element_type (sum (values (vb)), sum (bases (vb)));
     }, v);
   return distribution (v, f);
 }
@@ -40,7 +40,7 @@ distribution distribution::operator + (al_argtype rhs)
   std::vector<distribution> v { *this };
   target_function f ([rhs] (vals_and_bases vb)
   {
-      return val_and_base (values (vb)[0] + rhs, bases (vb)[0]);
+      return element_type (values (vb)[0] + rhs, bases (vb)[0]);
     }, v);
   return distribution (v, f);
 }
@@ -50,7 +50,7 @@ distribution distribution::operator * (al_argtype rhs)
   std::vector<distribution> v = distribution_vector (*this, tou (rhs));
   target_function f ([] (vals_and_bases vb)
   {
-      return val_and_base (sum (values (vb)), sum (bases (vb)));
+      return element_type (sum (values (vb)), sum (bases (vb)));
     }, v);
   return distribution (v, f);
 }
@@ -62,7 +62,7 @@ distribution::distribution (std::vector<distribution> distributions, target_func
   size_t current_level;
 
   std::vector<ind_and_size> levels (size);
-  std::pair<std::vector<val_and_base>, double> vals = { std::vector<val_and_base> (size), 1 };
+  std::pair<std::vector<element_type>, double> vals = { std::vector<element_type> (size), 1 };
 
   for (size_t i = 0; i < size; i++)
   {
@@ -95,11 +95,11 @@ distribution::distribution (std::vector<distribution> distributions, target_func
         }
 
       // add value to results
-      val_and_base value = function (vals.first);
+      element_type value = function (vals.first);
       double probability = vals.second;
 
       auto it = std::find_if (m_values_and_probabilities.begin (), m_values_and_probabilities.end (),
-                              [value] (const std::pair<val_and_base, double> &val_and_count)
+                              [value] (const std::pair<element_type, double> &val_and_count)
       {
           return (value.first == val_and_count.first.first
                   && value.second == val_and_count.first.second);
@@ -128,13 +128,13 @@ distribution::distribution (std::vector<std::pair<double, double>> values_and_pr
 
 void distribution::simplify ()
 {
-  std::vector<std::pair<val_and_base, double>> values_and_probabilities;
+  std::vector<std::pair<element_type, double>> values_and_probabilities;
   double total_probability = 0;
-  for (const std::pair<val_and_base, double> &value_and_case_count : m_values_and_probabilities)
+  for (const std::pair<element_type, double> &value_and_case_count : m_values_and_probabilities)
     total_probability += value_and_case_count.second;
-  for (const std::pair<val_and_base, double> &value_and_case_count : m_values_and_probabilities)
+  for (const std::pair<element_type, double> &value_and_case_count : m_values_and_probabilities)
     {
-      val_and_base value = value_and_case_count.first;
+      element_type value = value_and_case_count.first;
       double probability = static_cast<double> (value_and_case_count.second) / total_probability;
       values_and_probabilities.push_back ({value, probability});
     }
