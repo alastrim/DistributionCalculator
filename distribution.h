@@ -4,8 +4,8 @@
 class target_function;
 typedef std::pair<size_t, size_t> ind_and_size;
 
-std::vector<al_argtype> values (vals_and_bases src);
-std::vector<al_argtype> bases (vals_and_bases src);
+std::vector<al_argtype> values (const std::vector<element_type> & src);
+std::vector<al_argtype> bases (const std::vector<element_type> & src);
 
 
 class distribution

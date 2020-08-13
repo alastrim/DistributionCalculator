@@ -3,7 +3,7 @@
 #include "target_function.h"
 #include <algorithm>
 
-std::vector<al_argtype> values (vals_and_bases src)
+std::vector<al_argtype> values (const std::vector<element_type> & src)
 {
   std::vector<al_argtype> result;
   for (const element_type &pair : src)
@@ -11,7 +11,7 @@ std::vector<al_argtype> values (vals_and_bases src)
   return result;
 }
 
-std::vector<al_argtype> bases (vals_and_bases src)
+std::vector<al_argtype> bases (const std::vector<element_type> & src)
 {
   std::vector<al_argtype> result;
   for (const element_type &pair : src)
@@ -28,7 +28,7 @@ std::vector<distribution> distribution_vector (distribution etalon, unsigned int
 distribution distribution::operator + (distribution rhs)
 {
   std::vector<distribution> v { *this, rhs };
-  target_function f ([] (vals_and_bases vb)
+  target_function f ([] (const std::vector<element_type> & vb)
   {
       return element_type (sum (values (vb)), sum (bases (vb)));
     }, v);
@@ -38,7 +38,7 @@ distribution distribution::operator + (distribution rhs)
 distribution distribution::operator + (al_argtype rhs)
 {
   std::vector<distribution> v { *this };
-  target_function f ([rhs] (vals_and_bases vb)
+  target_function f ([rhs] (const std::vector<element_type> & vb)
   {
       return element_type (values (vb)[0] + rhs, bases (vb)[0]);
     }, v);
@@ -48,7 +48,7 @@ distribution distribution::operator + (al_argtype rhs)
 distribution distribution::operator * (al_argtype rhs)
 {
   std::vector<distribution> v = distribution_vector (*this, tou (rhs));
-  target_function f ([] (vals_and_bases vb)
+  target_function f ([] (const std::vector<element_type> & vb)
   {
       return element_type (sum (values (vb)), sum (bases (vb)));
     }, v);
