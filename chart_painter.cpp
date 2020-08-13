@@ -17,13 +17,17 @@ static std::vector<value_range_and_probability> format_for_showing (const std::v
   std::vector<value_and_probability> values_and_probabilities = const_values_and_probabilities;
   std::sort (values_and_probabilities.begin (), values_and_probabilities.end ());
 
-  std::vector<value_range_and_probability> bars (BARNUM);
-
   int size = tou (values_and_probabilities.size ());
+  std::vector<value_range_and_probability> bars (BARNUM);
+  int chunk_len = size / BARNUM;
+
   for (int i = 0; i < size; i++)
     {
-      int internal_ind = i / BARNUM;
-      if (internal_ind == 0)
+      int internal_ind = i / chunk_len;
+      if (internal_ind >= BARNUM)
+        internal_ind = BARNUM - 1;
+
+      if (!(i % chunk_len))
         bars[internal_ind].beg = values_and_probabilities[i].m_val;
       else
         bars[internal_ind].end = values_and_probabilities[i].m_val;
@@ -43,12 +47,27 @@ void create_chart (const std::vector<value_and_probability> &values_and_probabil
       average += value * probability;
     }
 
+  printf ("\n");
   printf ("Stats for %s:\n", name.c_str ());
   printf ("Average = %f\n", average);
 
   std::vector<value_range_and_probability> bars = format_for_showing (values_and_probabilities);
 
+  int len = 100;
+  int chunk = 100 / len;
+  al_assert (100 % len == 0, "Accuracy");
+
   for (const value_range_and_probability &bar : bars)
-    printf ("%3d to %3d: %.2f%%\n", bar.beg.m_val, bar.end.m_val, bar.prob * 100);
+    {
+      int valb = bar.beg.m_val;
+      int vale = bar.end.m_val;
+      double prob = bar.prob * 100;
+      int perc = (int) round (prob);
+
+      printf ("%3d to %3d: ", valb, vale);
+      for (int i = 0; i < len; i++)
+        printf ("%c", (perc > i * chunk) ? '#' : ' ');
+      printf (" %5.2f%%\n", prob);
+    }
 
 }
