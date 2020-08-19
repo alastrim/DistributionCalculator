@@ -4,6 +4,7 @@ SOURCES += \
     distribution.cpp \
     chart_painter.cpp \
     distribution_function.cpp \
+    standard_dice.cpp \
     target_function.cpp \
     modifiers.cpp
 

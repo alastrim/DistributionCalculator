@@ -25,7 +25,7 @@ std::vector<distribution> distribution_vector (distribution etalon, unsigned int
   return result;
 }
 
-distribution distribution::operator + (distribution rhs)
+distribution distribution::operator + (const distribution &rhs) const
 {
   std::vector<distribution> v { *this, rhs };
   target_function f ([] (const std::vector<element_t> & vb)
@@ -35,7 +35,7 @@ distribution distribution::operator + (distribution rhs)
   return distribution (v, f);
 }
 
-distribution distribution::operator + (int rhs)
+distribution distribution::operator + (int rhs) const
 {
   std::vector<distribution> v { *this };
   target_function f ([rhs] (const std::vector<element_t> & vb)
@@ -45,7 +45,7 @@ distribution distribution::operator + (int rhs)
   return distribution (v, f);
 }
 
-distribution distribution::operator * (int rhs)
+distribution distribution::operator * (int rhs) const
 {
   std::vector<distribution> v = distribution_vector (*this, tou (rhs));
   target_function f ([] (const std::vector<element_t> & vb)

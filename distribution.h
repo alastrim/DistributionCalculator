@@ -14,9 +14,9 @@ public:
   distribution (const distribution &rhs);
   distribution (std::vector<distribution> distributions, target_function function);
   distribution (std::vector<value_and_probability> values_and_probabilities);
-  distribution operator + (distribution rhs);
-  distribution operator + (int rhs);
-  distribution operator * (int rhs);
+  distribution operator + (const distribution &rhs) const;
+  distribution operator + (int rhs) const;
+  distribution operator * (int rhs) const;
   distribution get_base () const;
   void show (const std::string &name = "distribution");
 
