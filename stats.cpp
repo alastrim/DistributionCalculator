@@ -67,8 +67,8 @@ void stats_t::print (const std::string &name) const
   printf ("Stats for %s:\n", name.c_str ());
   if (!EXACT_PRINT)
     {
-      printf ("Average = %f\n", m_average);
-      printf ("Median  = %f\n", m_median);
+      printf ("Average = %.5g\n", m_average);
+      printf ("Median  = %.5g\n", m_median);
     }
   else
     {
