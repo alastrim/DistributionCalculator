@@ -26,6 +26,15 @@ int fuzzycmp (double a, double b)
   return -1;
 }
 
+int relfuzzycmp (double a, double b)
+{
+  if (fabs ((a - b) / b) < MIN_FOR_COMPARISON)
+    return 0;
+  if (a > b)
+    return 1;
+  return -1;
+}
+
 int toi (size_t src)
 {
   return static_cast<int> (src);

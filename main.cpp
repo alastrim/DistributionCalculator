@@ -3,9 +3,12 @@
 #include "target_function.h"
 #include "standard_dice.h"
 #include "modifiers.h"
+#include "tests.h"
 
 int main ()
 {
+  run_tests ();
+
   unsigned int AC = 15;
 
   distribution superiority_glaive = damage_on_hit (d20 + 6, great_weapon_fighting (d10) + d8 + 3, AC);

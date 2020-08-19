@@ -10,5 +10,5 @@ struct stats_t
   stats_t (double average, double median);
   stats_t (const std::vector<value_and_probability> &vals_and_probs);
   bool operator == (const stats_t &other) const;
-  void print (const std::string &name) const;
+  void print (const std::string &name = "distribution") const;
 };
