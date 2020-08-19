@@ -5,6 +5,7 @@ SOURCES += \
     chart_painter.cpp \
     distribution_function.cpp \
     standard_dice.cpp \
+    stats.cpp \
     target_function.cpp \
     modifiers.cpp
 
@@ -14,6 +15,7 @@ HEADERS += \
     chart_painter.h \
     distribution_function.h \
     standard_dice.h \
+    stats.h \
     target_function.h \
     modifiers.h
 

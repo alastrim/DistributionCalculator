@@ -1,6 +1,7 @@
 #include "distribution.h"
 #include "chart_painter.h"
 #include "target_function.h"
+#include "stats.h"
 #include <algorithm>
 
 std::vector<int> values (const std::vector<element_t> & src)
@@ -61,7 +62,7 @@ distribution::distribution (std::vector<distribution> distributions, target_func
   size_t total_size = 1;
   size_t current_level;
 
-  std::vector<ind_and_size> levels (size);
+  std::vector<std::pair<size_t, size_t>> levels (size);
   std::pair<std::vector<element_t>, double> vals = { std::vector<element_t> (size), 1 };
 
   for (size_t i = 0; i < size; i++)
@@ -139,7 +140,13 @@ void distribution::simplify ()
   m_values_and_probabilities = values_and_probabilities;
 }
 
-void distribution::show (const std::string &name)
+stats_t distribution::stats () const
 {
-  create_chart (m_values_and_probabilities, name);
+  return stats_t (m_values_and_probabilities);
+}
+
+void distribution::show (const std::string &name) const
+{
+  stats_t (m_values_and_probabilities).print (name);
+  chart (m_values_and_probabilities);
 }

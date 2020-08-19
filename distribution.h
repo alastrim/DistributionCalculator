@@ -2,7 +2,7 @@
 #include "misc.h"
 
 class target_function;
-typedef std::pair<size_t, size_t> ind_and_size;
+struct stats_t;
 
 std::vector<int> values (const std::vector<element_t> & src);
 std::vector<int> bases (const std::vector<element_t> & src);
@@ -11,6 +11,8 @@ std::vector<int> bases (const std::vector<element_t> & src);
 class distribution
 {
 public:
+  void show (const std::string &name = "distribution") const;
+  stats_t stats () const;
   distribution (const distribution &rhs);
   distribution (std::vector<distribution> distributions, target_function function);
   distribution (std::vector<value_and_probability> values_and_probabilities);
@@ -18,7 +20,6 @@ public:
   distribution operator + (int rhs) const;
   distribution operator * (int rhs) const;
   distribution get_base () const;
-  void show (const std::string &name = "distribution");
 
 private:
   void simplify ();
