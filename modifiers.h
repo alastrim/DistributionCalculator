@@ -5,8 +5,8 @@
 template<typename ElemT>
 class distribution;
 
-distribution<element_t> great_weapon_fighting (distribution<element_t> base_damage_dice);
-distribution<element_t> advantage (distribution<element_t> base_attack_dice);
-distribution<element_t> improved_critical_strike (distribution<element_t> base_attack_dice);
-distribution<element_t> auto_crit (distribution<element_t> base_attack_dice, unsigned int armor_class);
-distribution<element_t> damage_on_hit (distribution<element_t> attack_dice, distribution<element_t> damage_dice, unsigned int armor_class);
+distribution<dnd> great_weapon_fighting (distribution<dnd> base_damage_dice);
+distribution<dnd> advantage (distribution<dnd> base_attack_dice);
+distribution<dnd> improved_critical_strike (distribution<dnd> base_attack_dice);
+distribution<dnd> auto_crit (distribution<dnd> base_attack_dice, unsigned int armor_class);
+distribution<dnd> damage_on_hit (distribution<dnd> attack_dice, distribution<dnd> damage_dice, unsigned int armor_class);

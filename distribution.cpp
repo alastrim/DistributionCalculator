@@ -130,4 +130,4 @@ void distribution<ElemT>::show (const std::string &name) const
   chart (m_values_and_probabilities);
 }
 
-template class distribution<element_t>;
+template class distribution<dnd>;
