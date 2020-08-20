@@ -116,11 +116,11 @@ void distribution<ElemT>::simplify ()
   std::vector<value_and_probability<ElemT>> values_and_probabilities;
   double total_probability = 0;
   for (const value_and_probability<ElemT> &value_and_case_count : m_values_and_probabilities)
-    total_probability += value_and_case_count.m_probability;
+    total_probability += value_and_case_count.prob ();
   for (const value_and_probability<ElemT> &value_and_case_count : m_values_and_probabilities)
     {
       ElemT value = value_and_case_count.m_value;
-      double probability = static_cast<double> (value_and_case_count.m_probability) / total_probability;
+      double probability = static_cast<double> (value_and_case_count.prob ()) / total_probability;
       values_and_probabilities.push_back ({value, probability});
     }
   m_values_and_probabilities = values_and_probabilities;

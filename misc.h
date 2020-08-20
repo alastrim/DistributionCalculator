@@ -19,8 +19,11 @@ struct value_and_probability
   bool operator < (const value_and_probability<ElemT> &o) const { return m_value < o.m_value; }
   int val () const { return m_value.val (); }
   double prob () const { return m_probability; }
+private:
   ElemT m_value;
   double m_probability = 0;
+  template<typename T>
+  friend class distribution;
 };
 
 void al_assert (bool check, std::string message);
