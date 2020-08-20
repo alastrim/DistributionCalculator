@@ -44,18 +44,3 @@ unsigned int tou (int src)
 {
   return static_cast<unsigned int> (src);
 }
-
-int sum (const std::vector<int> &values)
-{
-  return std::accumulate (values.begin (), values.end (), static_cast<int> (0));
-}
-
-int min (const std::vector<int> &values)
-{
-  return *std::min_element (values.begin (), values.end ());
-}
-
-int max (const std::vector<int> &values)
-{
-  return *std::max_element (values.begin (), values.end ());
-}

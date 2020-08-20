@@ -9,10 +9,7 @@ template<typename ElemT>
 distribution<ElemT> distribution<ElemT>::operator + (const distribution<ElemT> &rhs) const
 {
   std::vector<distribution> v { *this, rhs };
-  target_function<ElemT> f ([] (const std::vector<ElemT> & vb)
-  {
-      return element_t (sum (values (vb)), sum (bases (vb)));
-    }, v);
+  target_function<ElemT> f ([] (const std::vector<ElemT> &vb) { return sum (vb); }, v);
   return distribution (v, f);
 }
 
@@ -20,10 +17,7 @@ template<typename ElemT>
 distribution<ElemT> distribution<ElemT>::operator + (int rhs) const
 {
   std::vector<distribution> v { *this };
-  target_function<ElemT> f ([rhs] (const std::vector<ElemT> & vb)
-  {
-      return element_t (values (vb)[0] + rhs, bases (vb)[0]);
-    }, v);
+  target_function<ElemT> f ([rhs] (const std::vector<ElemT> &vb) { return vb[0] + rhs; }, v);
   return distribution (v, f);
 }
 
@@ -31,10 +25,7 @@ template<typename ElemT>
 distribution<ElemT> distribution<ElemT>::operator * (int rhs) const
 {
   std::vector<distribution> v = distribution_vector (*this, tou (rhs));
-  target_function<ElemT> f ([] (const std::vector<ElemT> & vb)
-  {
-      return element_t (sum (values (vb)), sum (bases (vb)));
-    }, v);
+  target_function<ElemT> f ([] (const std::vector<ElemT> &vb) { return sum (vb); }, v);
   return distribution (v, f);
 }
 

@@ -6,6 +6,8 @@ struct element_t
 {
   bool operator == (const element_t &o) const { return m_modified == o.m_modified && m_base == o.m_base; }
   bool operator < (const element_t &o) const { return m_modified < o.m_modified; }
+  element_t operator + (const element_t &rhs) const { return element_t (m_modified + rhs.m_modified, m_base + rhs.m_base); }
+  element_t operator + (int rhs) const { return element_t (m_modified + rhs, m_base); }
   element_t () {}
   element_t (int modified, int base) : m_modified (modified), m_base (base) {}
   element_t (int val) : element_t (val, val) {}
