@@ -27,7 +27,7 @@ std::vector<int> values (const std::vector<element_t> & src)
 {
   std::vector<int> result;
   for (const element_t &pair : src)
-    result.push_back (pair.m_val);
+    result.push_back (pair.m_modified);
   return result;
 }
 

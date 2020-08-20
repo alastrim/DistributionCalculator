@@ -18,7 +18,7 @@ struct stats_t
       return;
     if (const_vals_and_probs.size () == 1)
       {
-        m_average = m_median = const_vals_and_probs[0].m_val.m_val;
+        m_average = m_median = const_vals_and_probs[0].val ();
         return;
       }
 
@@ -32,8 +32,8 @@ struct stats_t
 
     for (const value_and_probability<ElemT> &val_and_prob : vals_and_probs)
       {
-        double val = val_and_prob.m_val.m_val;
-        double prob = val_and_prob.m_probability;
+        double val = val_and_prob.val ();
+        double prob = val_and_prob.prob ();
         m_average += val * prob;
       }
 
@@ -41,16 +41,16 @@ struct stats_t
          fuzzycmp (l_prob, 0.5) < 0 && it < vals_and_probs.end (); it++)
       {
         value_and_probability<ElemT> val_and_prob = *it;
-        l_prob += val_and_prob.m_probability;
-        l_val = val_and_prob.m_val.m_val;
+        l_prob += val_and_prob.prob ();
+        l_val = val_and_prob.val ();
       }
 
   for (auto it = vals_and_probs.rbegin ();
        fuzzycmp (r_prob, 0.5) > 0 && it < vals_and_probs.rend (); it++)
     {
       value_and_probability<ElemT> val_and_prob = *it;
-      r_prob -= val_and_prob.m_probability;
-      r_val = val_and_prob.m_val.m_val;
+      r_prob -= val_and_prob.prob ();
+      r_val = val_and_prob.val ();
     }
 
   if ((r_prob - l_prob) < MIN_FOR_DIVISION)

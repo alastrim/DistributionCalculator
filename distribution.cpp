@@ -63,8 +63,8 @@ distribution<ElemT>::distribution (std::vector<distribution<ElemT>> distribution
         {
           size_t curr_ind = levels[current_level].first;
           value_and_probability<ElemT> vp = distributions[current_level].m_values_and_probabilities[curr_ind];
-          vals.first[current_level] = vp.m_val;
-          vals.second *= vp.m_probability;
+          vals.first[current_level] = vp.m_value;
+          vals.second *= vp.prob ();
         }
 
       // tick indices
@@ -85,7 +85,7 @@ distribution<ElemT>::distribution (std::vector<distribution<ElemT>> distribution
       auto it = std::find_if (m_values_and_probabilities.begin (), m_values_and_probabilities.end (),
                               [value] (const value_and_probability<ElemT> &val_and_count)
       {
-          return value == val_and_count.m_val;
+          return value == val_and_count.m_value;
         });
 
       if (it == m_values_and_probabilities.end ())
@@ -119,7 +119,7 @@ void distribution<ElemT>::simplify ()
     total_probability += value_and_case_count.m_probability;
   for (const value_and_probability<ElemT> &value_and_case_count : m_values_and_probabilities)
     {
-      ElemT value = value_and_case_count.m_val;
+      ElemT value = value_and_case_count.m_value;
       double probability = static_cast<double> (value_and_case_count.m_probability) / total_probability;
       values_and_probabilities.push_back ({value, probability});
     }

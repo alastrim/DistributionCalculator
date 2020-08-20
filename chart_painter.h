@@ -5,23 +5,22 @@
 
 #define BARNUM 10
 
-template<typename ElemT>
 struct val_range_and_prob
 {
   val_range_and_prob () {}
-  ElemT beg;
-  ElemT end;
+  int beg;
+  int end;
   double prob = 0;
 };
 
 template<typename ElemT>
-static std::vector<val_range_and_prob<ElemT>> format_for_showing (const std::vector<value_and_probability<ElemT>> &const_vals_and_probs)
+static std::vector<val_range_and_prob> format_for_showing (const std::vector<value_and_probability<ElemT>> &const_vals_and_probs)
 {
   std::vector<value_and_probability<ElemT>> vals_and_probs = const_vals_and_probs;
   std::sort (vals_and_probs.begin (), vals_and_probs.end ());
 
   int size = tou (vals_and_probs.size ());
-  std::vector<val_range_and_prob<ElemT>> bars (BARNUM);
+  std::vector<val_range_and_prob> bars (BARNUM);
   int chunk_len = size / BARNUM;
 
   for (int i = 0; i < size; i++)
@@ -31,10 +30,10 @@ static std::vector<val_range_and_prob<ElemT>> format_for_showing (const std::vec
         internal_ind = BARNUM - 1;
 
       if (!(i % chunk_len))
-        bars[internal_ind].beg = vals_and_probs[i].m_val;
+        bars[internal_ind].beg = vals_and_probs[i].val ();
       else
-        bars[internal_ind].end = vals_and_probs[i].m_val;
-      bars[internal_ind].prob += vals_and_probs[i].m_probability;
+        bars[internal_ind].end = vals_and_probs[i].val ();
+      bars[internal_ind].prob += vals_and_probs[i].prob();
     }
 
   return bars;
@@ -43,16 +42,16 @@ static std::vector<val_range_and_prob<ElemT>> format_for_showing (const std::vec
 template<typename ElemT>
 void chart (const std::vector<value_and_probability<ElemT>> &values_and_probabilities)
 {
-  std::vector<val_range_and_prob<ElemT>> bars = format_for_showing (values_and_probabilities);
+  std::vector<val_range_and_prob> bars = format_for_showing (values_and_probabilities);
 
   int len = 100;
   int chunk = 100 / len;
   al_assert (100 % len == 0, "Accuracy");
 
-  for (const val_range_and_prob<ElemT> &bar : bars)
+  for (const val_range_and_prob &bar : bars)
     {
-      int valb = bar.beg.m_val;
-      int vale = bar.end.m_val;
+      int valb = bar.beg;
+      int vale = bar.end;
       double prob = bar.prob * 100;
       int perc = (int) round (prob);
 

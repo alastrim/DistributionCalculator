@@ -4,14 +4,15 @@
 
 struct element_t
 {
-  bool operator == (const element_t &o) const { return m_val == o.m_val && m_base == o.m_base; }
-  bool operator < (const element_t &o) const { return m_val < o.m_val; }
+  bool operator == (const element_t &o) const { return m_modified == o.m_modified && m_base == o.m_base; }
+  bool operator < (const element_t &o) const { return m_modified < o.m_modified; }
   element_t () {}
-  element_t (int val, int base) : m_val (val), m_base (base) {}
+  element_t (int modified, int base) : m_modified (modified), m_base (base) {}
   element_t (int val) : element_t (val, val) {}
-  element_t (const element_t &o) : m_val (o.m_val), m_base (o.m_base) {}
-  element_t &operator = (const element_t &o) { m_val = o.m_val; m_base = o.m_base; return *this; }
-  int m_val = 0;
+  element_t (const element_t &o) : m_modified (o.m_modified), m_base (o.m_base) {}
+  element_t &operator = (const element_t &o) { m_modified = o.m_modified; m_base = o.m_base; return *this; }
+  int val () const { return m_modified; }
+  int m_modified = 0;
   int m_base = 0;
 };
 

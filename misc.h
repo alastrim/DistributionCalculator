@@ -15,9 +15,11 @@
 template<typename ElemT>
 struct value_and_probability
 {
-  value_and_probability (ElemT val, double probability) : m_val (val), m_probability (probability) {}
-  bool operator < (const value_and_probability<ElemT> &o) const { return m_val < o.m_val; }
-  ElemT m_val;
+  value_and_probability (ElemT val, double probability) : m_value (val), m_probability (probability) {}
+  bool operator < (const value_and_probability<ElemT> &o) const { return m_value < o.m_value; }
+  int val () const { return m_value.val (); }
+  double prob () const { return m_probability; }
+  ElemT m_value;
   double m_probability = 0;
 };
 
