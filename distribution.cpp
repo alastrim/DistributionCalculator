@@ -2,7 +2,7 @@
 #include "chart_painter.h"
 #include "target_function.h"
 #include "stats.h"
-#include "standard_dice.h"
+#include "dnd_dice.h"
 #include <algorithm>
 
 template<typename ElemT>

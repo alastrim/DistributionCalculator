@@ -1,7 +1,7 @@
 #include "tests.h"
 
 #include "distribution.h"
-#include "standard_dice.h"
+#include "dnd_dice.h"
 #include "modifiers.h"
 #include "misc.h"
 #include "stats.h"

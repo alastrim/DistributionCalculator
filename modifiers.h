@@ -1,6 +1,6 @@
 #pragma once
 #include "misc.h"
-#include "standard_dice.h"
+#include "dnd_dice.h"
 
 template<typename ElemT>
 class distribution;

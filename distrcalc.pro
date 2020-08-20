@@ -1,21 +1,21 @@
 SOURCES += \
+    dnd_dice.cpp \
     main.cpp \
     misc.cpp \
     distribution.cpp \
     chart_painter.cpp \
     distribution_function.cpp \
-    standard_dice.cpp \
     stats.cpp \
     target_function.cpp \
     modifiers.cpp \
     tests.cpp
 
 HEADERS += \
+    dnd_dice.h \
     misc.h \
     distribution.h \
     chart_painter.h \
     distribution_function.h \
-    standard_dice.h \
     stats.h \
     target_function.h \
     modifiers.h \

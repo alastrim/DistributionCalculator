@@ -1,4 +1,4 @@
-#include "standard_dice.h"
+#include "dnd_dice.h"
 
 distribution<element_t> create_d_something (int size)
 {
