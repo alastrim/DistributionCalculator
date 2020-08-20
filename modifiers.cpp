@@ -2,10 +2,10 @@
 #include "distribution.h"
 #include "target_function.h"
 
-distribution great_weapon_fighting (distribution base_damage_dice)
+distribution<element_t> great_weapon_fighting (distribution<element_t> base_damage_dice)
 {
-  std::vector<distribution> v = {base_damage_dice, base_damage_dice};
-  target_function f ([] (const std::vector<element_t> & vb)
+  std::vector<distribution<element_t>> v = {base_damage_dice, base_damage_dice};
+  target_function<element_t> f ([] (const std::vector<element_t> & vb)
     {
       int dmg_dice_1 = (values (vb)[0]);
       int dmg_dice_2 = (values (vb)[1]);
@@ -14,13 +14,13 @@ distribution great_weapon_fighting (distribution base_damage_dice)
         return element_t (dmg_dice_2, dmg_dice_2);
       return element_t (dmg_dice_1, dmg_dice_1);
      }, v);
-  return distribution (v, f);
+  return distribution<element_t> (v, f);
 }
 
-distribution advantage (distribution base_attack_dice)
+distribution<element_t> advantage (distribution<element_t> base_attack_dice)
 {
-  std::vector<distribution> v = {base_attack_dice, base_attack_dice};
-  target_function f ([] (const std::vector<element_t> & vb)
+  std::vector<distribution<element_t>> v = {base_attack_dice, base_attack_dice};
+  target_function<element_t> f ([] (const std::vector<element_t> & vb)
     {
       int base_1 = (bases (vb)[0]);
       int base_2 = (bases (vb)[1]);
@@ -32,13 +32,13 @@ distribution advantage (distribution base_attack_dice)
 
       return element_t (val_max, base_max);
      }, v);
-  return distribution (v, f);
+  return distribution<element_t> (v, f);
 }
 
-distribution improved_critical_strike (distribution base_attack_dice)
+distribution<element_t> improved_critical_strike (distribution<element_t> base_attack_dice)
 {
-  std::vector<distribution> v = {base_attack_dice};
-  target_function f ([] (const std::vector<element_t> & vb)
+  std::vector<distribution<element_t>> v = {base_attack_dice};
+  target_function<element_t> f ([] (const std::vector<element_t> & vb)
     {
       int val_dice = (values (vb)[0]);
       int base_dice = (bases (vb)[0]);
@@ -48,13 +48,13 @@ distribution improved_critical_strike (distribution base_attack_dice)
 
       return element_t (val_dice, base_dice);
      }, v);
-  return distribution (v, f);
+  return distribution<element_t> (v, f);
 }
 
-distribution auto_crit (distribution base_attack_dice, unsigned int armor_class)
+distribution<element_t> auto_crit (distribution<element_t> base_attack_dice, unsigned int armor_class)
 {
-  std::vector<distribution> v = {base_attack_dice};
-  target_function f ([armor_class] (const std::vector<element_t> & vb)
+  std::vector<distribution<element_t>> v = {base_attack_dice};
+  target_function<element_t> f ([armor_class] (const std::vector<element_t> & vb)
     {
       int val_dice = values (vb)[0];
       int base_dice = bases (vb)[0];
@@ -64,13 +64,13 @@ distribution auto_crit (distribution base_attack_dice, unsigned int armor_class)
 
       return element_t (val_dice, base_dice);
      }, v);
-  return distribution (v, f);
+  return distribution<element_t> (v, f);
 }
 
-distribution damage_on_hit (distribution attack_dice, distribution damage_dice, unsigned int armor_class)
+distribution<element_t> damage_on_hit (distribution<element_t> attack_dice, distribution<element_t> damage_dice, unsigned int armor_class)
 {
-  std::vector<distribution> v = {attack_dice, damage_dice};
-  target_function f ([=] (const std::vector<element_t> & vb)
+  std::vector<distribution<element_t>> v = {attack_dice, damage_dice};
+  target_function<element_t> f ([=] (const std::vector<element_t> & vb)
     {
       int base_attack = (bases (vb)[0]);
       int val_attack = (values (vb)[0]);
@@ -85,5 +85,5 @@ distribution damage_on_hit (distribution attack_dice, distribution damage_dice, 
         return element_t (val_damage, val_damage);
       return element_t (0, 0);
     }, v);
-  return distribution (v, f);
+  return distribution<element_t> (v, f);
 }

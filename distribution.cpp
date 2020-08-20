@@ -2,68 +2,51 @@
 #include "chart_painter.h"
 #include "target_function.h"
 #include "stats.h"
+#include "standard_dice.h"
 #include <algorithm>
 
-std::vector<int> values (const std::vector<element_t> & src)
-{
-  std::vector<int> result;
-  for (const element_t &pair : src)
-    result.push_back (pair.m_val);
-  return result;
-}
-
-std::vector<int> bases (const std::vector<element_t> & src)
-{
-  std::vector<int> result;
-  for (const element_t &pair : src)
-    result.push_back (pair.m_base);
-  return result;
-}
-
-std::vector<distribution> distribution_vector (distribution etalon, unsigned int count)
-{
-  std::vector<distribution> result (count, etalon);
-  return result;
-}
-
-distribution distribution::operator + (const distribution &rhs) const
+template<typename ElemT>
+distribution<ElemT> distribution<ElemT>::operator + (const distribution<ElemT> &rhs) const
 {
   std::vector<distribution> v { *this, rhs };
-  target_function f ([] (const std::vector<element_t> & vb)
+  target_function<ElemT> f ([] (const std::vector<ElemT> & vb)
   {
       return element_t (sum (values (vb)), sum (bases (vb)));
     }, v);
   return distribution (v, f);
 }
 
-distribution distribution::operator + (int rhs) const
+template<typename ElemT>
+distribution<ElemT> distribution<ElemT>::operator + (int rhs) const
 {
   std::vector<distribution> v { *this };
-  target_function f ([rhs] (const std::vector<element_t> & vb)
+  target_function<ElemT> f ([rhs] (const std::vector<ElemT> & vb)
   {
       return element_t (values (vb)[0] + rhs, bases (vb)[0]);
     }, v);
   return distribution (v, f);
 }
 
-distribution distribution::operator * (int rhs) const
+template<typename ElemT>
+distribution<ElemT> distribution<ElemT>::operator * (int rhs) const
 {
   std::vector<distribution> v = distribution_vector (*this, tou (rhs));
-  target_function f ([] (const std::vector<element_t> & vb)
+  target_function<ElemT> f ([] (const std::vector<ElemT> & vb)
   {
       return element_t (sum (values (vb)), sum (bases (vb)));
     }, v);
   return distribution (v, f);
 }
 
-distribution::distribution (std::vector<distribution> distributions, target_function function)
+template<typename ElemT>
+distribution<ElemT>::distribution (std::vector<distribution<ElemT>> distributions, target_function<ElemT> function)
 {
   size_t size = distributions.size ();
   size_t total_size = 1;
   size_t current_level;
 
   std::vector<std::pair<size_t, size_t>> levels (size);
-  std::pair<std::vector<element_t>, double> vals = { std::vector<element_t> (size), 1 };
+  std::pair<std::vector<ElemT>, double> vals = { std::vector<ElemT> (size), 1 };
 
   for (size_t i = 0; i < size; i++)
   {
@@ -79,7 +62,7 @@ distribution::distribution (std::vector<distribution> distributions, target_func
       for (current_level = 0; current_level < size; current_level++)
         {
           size_t curr_ind = levels[current_level].first;
-          value_and_probability vp = distributions[current_level].m_values_and_probabilities[curr_ind];
+          value_and_probability<ElemT> vp = distributions[current_level].m_values_and_probabilities[curr_ind];
           vals.first[current_level] = vp.m_val;
           vals.second *= vp.m_probability;
         }
@@ -96,11 +79,11 @@ distribution::distribution (std::vector<distribution> distributions, target_func
         }
 
       // add value to results
-      element_t value = function (vals.first);
+      ElemT value = function (vals.first);
       double probability = vals.second;
 
       auto it = std::find_if (m_values_and_probabilities.begin (), m_values_and_probabilities.end (),
-                              [value] (const value_and_probability &val_and_count)
+                              [value] (const value_and_probability<ElemT> &val_and_count)
       {
           return value == val_and_count.m_val;
         });
@@ -113,40 +96,47 @@ distribution::distribution (std::vector<distribution> distributions, target_func
   simplify ();
 }
 
-distribution::distribution (const distribution &rhs)
+template<typename ElemT>
+distribution<ElemT>::distribution (const distribution<ElemT> &rhs)
 {
   m_values_and_probabilities = rhs.m_values_and_probabilities;
   simplify ();
 }
 
-distribution::distribution (std::vector<value_and_probability> values_and_probabilities)
+template<typename ElemT>
+distribution<ElemT>::distribution (std::vector<value_and_probability<ElemT>> values_and_probabilities)
 {
   m_values_and_probabilities = values_and_probabilities;
   simplify ();
 }
 
-void distribution::simplify ()
+template<typename ElemT>
+void distribution<ElemT>::simplify ()
 {
-  std::vector<value_and_probability> values_and_probabilities;
+  std::vector<value_and_probability<ElemT>> values_and_probabilities;
   double total_probability = 0;
-  for (const value_and_probability &value_and_case_count : m_values_and_probabilities)
+  for (const value_and_probability<ElemT> &value_and_case_count : m_values_and_probabilities)
     total_probability += value_and_case_count.m_probability;
-  for (const value_and_probability &value_and_case_count : m_values_and_probabilities)
+  for (const value_and_probability<ElemT> &value_and_case_count : m_values_and_probabilities)
     {
-      element_t value = value_and_case_count.m_val;
+      ElemT value = value_and_case_count.m_val;
       double probability = static_cast<double> (value_and_case_count.m_probability) / total_probability;
       values_and_probabilities.push_back ({value, probability});
     }
   m_values_and_probabilities = values_and_probabilities;
 }
 
-stats_t distribution::stats () const
+template<typename ElemT>
+stats_t distribution<ElemT>::stats () const
 {
   return stats_t (m_values_and_probabilities);
 }
 
-void distribution::show (const std::string &name) const
+template<typename ElemT>
+void distribution<ElemT>::show (const std::string &name) const
 {
   stats_t (m_values_and_probabilities).print (name);
   chart (m_values_and_probabilities);
 }
+
+template class distribution<element_t>;

@@ -12,24 +12,12 @@
 #define ELEMS_ON_SCREEN 12
 #define DEBUG 1
 
-struct element_t
-{
-  bool operator == (const element_t &o) const { return m_val == o.m_val && m_base == o.m_base; }
-  bool operator < (const element_t &o) const { return m_val < o.m_val; }
-  element_t () {}
-  element_t (int val, int base) : m_val (val), m_base (base) {}
-  element_t (int val) : element_t (val, val) {}
-  element_t (const element_t &o) : m_val (o.m_val), m_base (o.m_base) {}
-  element_t &operator = (const element_t &o) { m_val = o.m_val; m_base = o.m_base; return *this; }
-  int m_val = 0;
-  int m_base = 0;
-};
-
+template<typename ElemT>
 struct value_and_probability
 {
-  value_and_probability (element_t val, double probability) : m_val (val), m_probability (probability) {}
-  bool operator < (const value_and_probability &o) const { return m_val < o.m_val; }
-  element_t m_val;
+  value_and_probability (ElemT val, double probability) : m_val (val), m_probability (probability) {}
+  bool operator < (const value_and_probability<ElemT> &o) const { return m_val < o.m_val; }
+  ElemT m_val;
   double m_probability = 0;
 };
 

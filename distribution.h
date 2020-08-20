@@ -1,21 +1,19 @@
 #pragma once
 #include "misc.h"
 
+template<typename ElemT>
 class target_function;
 struct stats_t;
 
-std::vector<int> values (const std::vector<element_t> & src);
-std::vector<int> bases (const std::vector<element_t> & src);
-
-
+template<typename ElemT>
 class distribution
 {
 public:
   void show (const std::string &name = "distribution") const;
   stats_t stats () const;
   distribution (const distribution &rhs);
-  distribution (std::vector<distribution> distributions, target_function function);
-  distribution (std::vector<value_and_probability> values_and_probabilities);
+  distribution (std::vector<distribution> distributions, target_function<ElemT> function);
+  distribution (std::vector<value_and_probability<ElemT>> values_and_probabilities);
   distribution operator + (const distribution &rhs) const;
   distribution operator + (int rhs) const;
   distribution operator * (int rhs) const;
@@ -23,7 +21,9 @@ public:
 
 private:
   void simplify ();
-  std::vector<value_and_probability> m_values_and_probabilities;
+  std::vector<value_and_probability<ElemT>> m_values_and_probabilities;
 };
 
-std::vector<distribution> distribution_vector (distribution etalon, unsigned int count);
+template<typename ElemT>
+std::vector<distribution<ElemT>> distribution_vector (distribution<ElemT> etalon, unsigned int count)
+{ return std::vector<distribution<ElemT>> (count, etalon); }
