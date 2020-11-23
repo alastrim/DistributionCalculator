@@ -126,7 +126,8 @@ stats_t distribution<ElemT>::stats () const
 template<typename ElemT>
 void distribution<ElemT>::show (const std::string &name) const
 {
-  stats_t (m_values_and_probabilities).print (name);
+  printf ("\n%s\n", name.c_str ());
+  stats_t (m_values_and_probabilities).print ();
   chart (m_values_and_probabilities);
 }
 

@@ -2,6 +2,21 @@
 #include "distribution.h"
 #include "target_function.h"
 
+distribution<dnd> highiest (std::vector<distribution<dnd>> distributions)
+{
+  target_function<dnd> f ([] (const std::vector<dnd> &vb) { return *std::max_element (vb.begin (), vb.end ()); }, distributions);
+  return distribution<dnd> (distributions, f);
+}
+
+distribution<dnd> roll4drop1 ()
+{
+  std::vector<distribution<dnd>> v = {d6, d6, d6, d6};
+  target_function<dnd> f ([] (const std::vector<dnd> &vb) {
+    return dnd (sum (vb).val () - min (vb).val ());
+  }, v);
+  return distribution<dnd> (v, f);
+}
+
 distribution<dnd> great_weapon_fighting (distribution<dnd> base_damage_dice)
 {
   std::vector<distribution<dnd>> v = {base_damage_dice, base_damage_dice};

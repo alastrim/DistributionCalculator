@@ -37,6 +37,6 @@ int relfuzzycmp (double a, double b = 0.0);
 template<typename T>
 T sum (const std::vector<T> &values) { return std::accumulate (values.begin (), values.end (), T { 0 }); }
 template<typename T>
-int min (const std::vector<int> &values) { return *std::min_element (values.begin (), values.end ()); }
+T min (const std::vector<T> &values) { return *std::min_element (values.begin (), values.end ()); }
 template<typename T>
-int max (const std::vector<int> &values) { return *std::max_element (values.begin (), values.end ()); }
+T max (const std::vector<T> &values) { return *std::max_element (values.begin (), values.end ()); }

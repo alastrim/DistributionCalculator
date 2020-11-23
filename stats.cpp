@@ -12,10 +12,9 @@ bool stats_t::operator == (const stats_t &other) const
       && !relfuzzycmp (m_median, other.m_median);
 }
 
-void stats_t::print (const std::string &name) const
+void stats_t::print () const
 {
-  printf ("\n");
-  printf ("Stats for %s:\n", name.c_str ());
+  printf ("Statistic info:\n");
   if (!EXACT_PRINT)
     {
       printf ("Average = %.5g\n", m_average);

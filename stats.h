@@ -9,7 +9,7 @@ struct stats_t
 
   stats_t (double average, double median);
   bool operator == (const stats_t &other) const;
-  void print (const std::string &name = "distribution") const;
+  void print () const;
 
   template<typename ElemT>
   stats_t (const std::vector<value_and_probability<ElemT>> &const_vals_and_probs)
